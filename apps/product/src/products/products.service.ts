@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
-
+import { SHARED_GREETING } from '@repo/shared';
 @Injectable()
 export class ProductsService {
   create(createProductInput: CreateProductInput) {
