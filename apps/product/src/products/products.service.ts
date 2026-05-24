@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateProductInput } from './dto/create-product.input';
-// import { UpdateProductInput } from './dto/update-product.input';
-// import { SHARED_GREETING } from '@repo/shared';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product, productDocument } from './product.schema';
+import { FiltersProductInput } from './dto/filters-product.input';
 @Injectable()
 export class ProductsService {
   constructor(
@@ -19,17 +18,38 @@ export class ProductsService {
     return savedProduct;
   }
 
-  async findAllProducts(): Promise<productDocument[]> {
+  async findAllProducts(filters: FiltersProductInput): Promise<Product[]> {
+    if (filters != null) {
+      const filtersToMongo: any = {};
+      if (filters.price != null) {
+        filtersToMongo.price = {
+          $gte: filters.price.from,
+          $lte: filters.price.to,
+        };
+      }
+
+      if (filters.company != null) {
+        filtersToMongo.company = filters.company;
+      }
+
+      if (filters.tag != null) {
+        filtersToMongo.tag = filters.tag;
+      }
+      return this.productModel.find(filtersToMongo).exec();
+    }
+
     return this.productModel.find().exec();
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} product`;
-  // }
+  async getProductById(productId: number): Promise<Product> {
+    const product = await this.productModel.findOne({ productId }).exec();
 
-  // update(id: number, updateProductInput: UpdateProductInput) {
-  //   return `This action updates a #${id} product`;
-  // }
+    if (product == null) {
+      throw new Error('Product with productId ' + productId + ' not found');
+    }
+
+    return product;
+  }
 
   async removeProduct(productId: number): Promise<string> {
     await this.productModel.findOneAndDelete({ productId }).exec();

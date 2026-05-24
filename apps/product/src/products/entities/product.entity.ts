@@ -3,10 +3,8 @@ import { ObjectType, Field, ID } from '@nestjs/graphql';
 @ObjectType()
 export class Product {
   @Field(() => ID)
-  productId?: number;
-
   @Field()
-  id?: string;
+  productId?: number;
 
   @Field()
   name?: string;

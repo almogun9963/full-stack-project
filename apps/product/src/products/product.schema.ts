@@ -5,9 +5,6 @@ export type productDocument = HydratedDocument<Product>;
 
 @Schema()
 export class Product {
-  @Prop()
-  id?: string;
-
   @Prop({ type: Number, unique: true, required: true })
   productId?: number;
 
