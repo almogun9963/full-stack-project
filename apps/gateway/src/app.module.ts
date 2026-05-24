@@ -8,9 +8,6 @@ import { IntrospectAndCompose } from '@apollo/gateway';
   imports: [
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
-      // server: {
-      //   cors: true,
-      // },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
           subgraphs: [

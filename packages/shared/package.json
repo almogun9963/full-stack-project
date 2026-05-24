@@ -71,6 +71,7 @@
 
   "exports": {
     ".":  "./src/env.ts",
-    "./env": "./src/env.ts"
+    "./env": "./src/env.ts",
+    "./db": "./src/db-maneger.ts"
   }
 }
