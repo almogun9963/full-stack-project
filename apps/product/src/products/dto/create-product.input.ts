@@ -1,12 +1,15 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsString,
+} from 'class-validator';
+import { Tag } from './tags.enum';
 
 @InputType()
 export class CreateProductDto {
-  @Field()
-  @IsNumber()
-  productId?: number;
-
   @Field()
   @IsString()
   name?: string;
@@ -23,25 +26,32 @@ export class CreateProductDto {
   @IsString()
   productType?: string;
 
-  // @Field()
-  // ratings?: string[];
+  @Field(() => [Number])
+  @IsArray()
+  ratings?: number[];
 
   @Field()
   @IsString()
   description?: string;
 
   @Field()
-  @IsNumber()
-  size?: number;
+  @IsString()
+  size?: string;
 
-  // @Field()
-  // tags?: string[];
+  @Field(() => [Tag])
+  @IsArray()
+  @IsEnum(Tag, { each: true })
+  tags?: Tag[];
 
   @Field()
   @IsString()
   imageUrl?: string;
 
   @Field()
-  @IsNumber()
-  sellerId?: number;
+  @IsBoolean()
+  isAvailable?: boolean;
+
+  @Field()
+  @IsString()
+  catagory?: string;
 }

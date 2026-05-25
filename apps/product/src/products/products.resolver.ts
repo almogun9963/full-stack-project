@@ -10,6 +10,7 @@ export class ProductsResolver {
 
   @Mutation(() => Product)
   addProduct(@Args('createProductInput') createProductInput: CreateProductDto) {
+    console.log('createProductInput: ', JSON.stringify(createProductInput));
     return this.productsService.addProduct(createProductInput);
   }
 
@@ -22,12 +23,12 @@ export class ProductsResolver {
   }
 
   @Query(() => Product, { name: 'getProduct' })
-  getProductById(@Args('productId', { type: () => Int }) productId: number) {
-    return this.productsService.getProductById(productId);
+  getProductById(@Args('id', { type: () => String }) id: string) {
+    return this.productsService.getProductById(id);
   }
 
   @Mutation(() => String, { name: 'removeProduct' })
-  removeProduct(@Args('productId', { type: () => Int }) productId: number) {
-    return this.productsService.removeProduct(productId);
+  removeProduct(@Args('id', { type: () => String }) id: string) {
+    return this.productsService.removeProduct(id);
   }
 }

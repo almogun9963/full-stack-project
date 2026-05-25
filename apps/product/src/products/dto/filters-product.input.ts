@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { RangeInput } from './from-to-range-filter';
+import { Tag } from './tags.enum';
 
 @InputType()
 export class FiltersProductInput {
@@ -9,6 +10,6 @@ export class FiltersProductInput {
   @Field({ nullable: true })
   company?: string;
 
-  @Field({ nullable: true })
-  tag?: string;
+  @Field(() => [Tag], { nullable: true })
+  tags?: Tag[];
 }
