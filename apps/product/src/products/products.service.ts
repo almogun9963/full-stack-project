@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { CreateProductInput } from './dto/create-product.input';
+import { CreateProductDto } from './dto/create-product.input';
 import { InjectModel } from '@nestjs/mongoose';
-import { Product, productDocument } from './product.schema';
+
 import { FiltersProductInput } from './dto/filters-product.input';
+import { Product } from './entities/product.entity';
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
   ) {}
 
-  async addProduct(
-    createProductInput: CreateProductInput,
-  ): Promise<productDocument> {
+  async addProduct(createProductInput: CreateProductDto): Promise<Product> {
     const createdProduct = new this.productModel(createProductInput);
     const savedProduct = await createdProduct.save();
     return savedProduct;
@@ -35,6 +34,7 @@ export class ProductsService {
       if (filters.tag != null) {
         filtersToMongo.tag = filters.tag;
       }
+
       return this.productModel.find(filtersToMongo).exec();
     }
 

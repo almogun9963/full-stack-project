@@ -3,8 +3,8 @@ import { ProductsService } from './products.service';
 import { ProductsResolver } from './products.resolver';
 import { ApolloFederationDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
-import { Product, productSchema } from './product.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Product, productSchema } from './entities/product.entity';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Product.name, schema: productSchema }]),
