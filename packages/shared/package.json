@@ -70,8 +70,13 @@
   },
 
   "exports": {
-    ".":  "./src/env.ts",
-    "./env": "./src/env.ts",
-    "./db": "./src/db-maneger.ts"
+    "./productType": {
+      "types": "./dist/types/product.type.d.ts",
+      "default": "./dist/types/product.type.js"
+    },
+    "./tag": {
+      "types": "./dist/types/tag.type.d.ts",
+      "default": "./dist/types/tag.type.js"
+    }
   }
 }

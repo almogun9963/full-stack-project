@@ -1,11 +1,10 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { IsArray, IsEnum } from 'class-validator';
-import { Tag } from '../dto/tags.enum';
-
+import { ProductType } from '@repo/shared/productType';
+import { Tag } from '@repo/shared/tag';
 @ObjectType()
 @Schema()
-export class Product {
+export class Product implements ProductType {
   @Field(() => ID)
   id?: string;
 
@@ -27,7 +26,6 @@ export class Product {
 
   @Field(() => [Number])
   @Prop({ type: [Number], default: [] })
-  @IsArray()
   ratings?: number[];
 
   @Field()
@@ -40,8 +38,6 @@ export class Product {
 
   @Field(() => [Tag])
   @Prop({ type: [String], enum: Tag, default: [Tag.North] })
-  @IsArray()
-  @IsEnum(Tag, { each: true })
   tags?: Tag[];
 
   @Field()

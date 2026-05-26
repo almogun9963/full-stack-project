@@ -6,7 +6,7 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import { Tag } from './tags.enum';
+import { Tag } from '@repo/shared/tag';
 
 @InputType()
 export class CreateProductDto {
