@@ -13,7 +13,6 @@ export class ProductsService {
 
   async addProduct(createProductInput: CreateProductDto): Promise<Product> {
     const createdProduct = new this.productModel(createProductInput);
-    console.log('createdProduct: ', JSON.stringify(createdProduct));
     const savedProduct = await createdProduct.save();
     return savedProduct;
   }

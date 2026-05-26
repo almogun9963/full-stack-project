@@ -77,6 +77,10 @@
     "./tag": {
       "types": "./dist/types/tag.type.d.ts",
       "default": "./dist/types/tag.type.js"
+    },
+    "./cartType": {
+      "types": "./dist/types/cart.type.d.ts",
+      "default": "./dist/types/cart.type.js"
     }
   }
 }

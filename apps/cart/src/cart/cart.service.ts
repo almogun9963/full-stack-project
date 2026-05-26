@@ -1,26 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCartInput } from './dto/create-cart.input';
-import { UpdateCartInput } from './dto/update-cart.input';
-
+import { InjectModel } from '@nestjs/mongoose';
+import { Cart } from './entities/cart.entity';
+import { Model } from 'mongoose';
 @Injectable()
 export class CartService {
-  create(createCartInput: CreateCartInput) {
-    return 'This action adds a new cart';
+  constructor(@InjectModel(Cart.name) private cartModel: Model<Cart>) {}
+
+  async create(createCartInput: CreateCartInput) {
+    const createdCart = new this.cartModel(createCartInput);
+    const savedCart = await createdCart.save();
+    return savedCart;
   }
 
-  findAll() {
-    return `This action returns all cart`;
+  async findOne(id: string) {
+    const cart = await this.cartModel.findOne({ _id: id }).exec();
+
+    if (cart == null) {
+      throw new Error('Cart with id ' + id + ' not found');
+    }
+
+    return cart;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
+  async addToCart(id: string, productIdToAdd: string) {
+    const result = await this.cartModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $push: { productsIds: productIdToAdd } },
+        { new: true },
+      )
+      .exec();
+
+    return result;
   }
 
-  update(id: number, updateCartInput: UpdateCartInput) {
-    return `This action updates a #${id} cart`;
+  async removeFromCart(id: string, productIdToRemove: string) {
+    const result = await this.cartModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $pull: { productsIds: productIdToRemove } },
+        { new: true },
+      )
+      .exec();
+
+    return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+  async deleteCart(id: string) {
+    const result = await this.cartModel.findByIdAndRemove(id).exec();
+    return `successfully deleted cart with id: ${id}. deleted cart: ${JSON.stringify(result)}`;
   }
 }

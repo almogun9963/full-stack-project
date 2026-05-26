@@ -1,7 +1,13 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-
+import { InputType, Field } from '@nestjs/graphql';
+import { IsArray, IsString } from 'class-validator';
 @InputType()
 export class CreateCartInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field()
+  @IsString()
+  userId?: string;
+
+  @Field(() => [String], { defaultValue: [] })
+  @IsArray()
+  @IsString({ each: true })
+  productsIds?: string[];
 }

@@ -15,6 +15,10 @@ import { IntrospectAndCompose } from '@apollo/gateway';
               name: 'product',
               url: 'http://localhost:3001/graphql',
             },
+            {
+              name: 'cart',
+              url: 'http://localhost:3002/graphql',
+            },
           ],
         }),
       },

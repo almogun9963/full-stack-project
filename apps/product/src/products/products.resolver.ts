@@ -10,7 +10,6 @@ export class ProductsResolver {
 
   @Mutation(() => Product)
   addProduct(@Args('createProductInput') createProductInput: CreateProductDto) {
-    console.log('createProductInput: ', JSON.stringify(createProductInput));
     return this.productsService.addProduct(createProductInput);
   }
 
@@ -18,7 +17,6 @@ export class ProductsResolver {
   findAllProducts(
     @Args('filters', { nullable: true }) filters: FiltersProductInput,
   ) {
-    console.log('filters: ', JSON.stringify(filters));
     return this.productsService.findAllProducts(filters);
   }
 
