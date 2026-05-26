@@ -4,4 +4,6 @@ export interface CartType {
   userId?: string;
 
   productsIds?: string[];
+
+  deletedAt?: Date;
 }

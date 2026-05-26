@@ -15,6 +15,10 @@ export class Cart implements CartType {
   @Field(() => [String], { defaultValue: [] })
   @Prop()
   productsIds?: string[];
+
+  @Field(() => Date, { nullable: true })
+  @Prop()
+  deletedAt?: Date;
 }
 
 export const cartSchema = SchemaFactory.createForClass(Cart);

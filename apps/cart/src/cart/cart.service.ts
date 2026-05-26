@@ -48,7 +48,10 @@ export class CartService {
   }
 
   async deleteCart(id: string) {
-    const result = await this.cartModel.findByIdAndRemove(id).exec();
-    return `successfully deleted cart with id: ${id}. deleted cart: ${JSON.stringify(result)}`;
+    await this.cartModel
+      .findOneAndUpdate({ _id: id }, { deletedAt: new Date() }, { new: true })
+      .exec();
+
+    return 'Cart with id ' + id + ' has been deleted';
   }
 }
