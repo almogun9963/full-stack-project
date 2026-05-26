@@ -13,7 +13,7 @@ export class CartService {
     return savedCart;
   }
 
-  async findOne(id: string) {
+  async getCartById(id: string) {
     const cart = await this.cartModel.findOne({ _id: id }).exec();
 
     if (cart == null) {

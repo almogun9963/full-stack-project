@@ -11,9 +11,9 @@ export class CartResolver {
     return this.cartService.create(createCartInput);
   }
 
-  @Query(() => Cart, { name: 'cart' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.cartService.findOne(id);
+  @Query(() => Cart, { name: 'getCart' })
+  getCartById(@Args('id', { type: () => String }) id: string) {
+    return this.cartService.getCartById(id);
   }
 
   @Mutation(() => Cart)

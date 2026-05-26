@@ -81,6 +81,10 @@
     "./cartType": {
       "types": "./dist/types/cart.type.d.ts",
       "default": "./dist/types/cart.type.js"
+    },
+    "./orderType": {
+      "types": "./dist/types/order.type.d.ts",
+      "default": "./dist/types/order.type.js"
     }
   }
 }
