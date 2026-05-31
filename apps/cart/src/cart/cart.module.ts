@@ -5,6 +5,8 @@ import { ApolloFederationDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Cart, cartSchema } from './entities/cart.entity';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from '../auth/auth.gaurd';
 
 @Module({
   imports: [
@@ -16,6 +18,14 @@ import { Cart, cartSchema } from './entities/cart.entity';
       },
     }),
   ],
-  providers: [CartResolver, CartService],
+  providers: [
+    CartResolver,
+
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    CartService,
+  ],
 })
 export class CartModule {}
