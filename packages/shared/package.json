@@ -97,6 +97,10 @@
       "./secret": {
       "types": "./dist/src/secret.d.ts",
       "default": "./dist/src/secret.js"
+    },
+      "./userDecorator": {
+      "types": "./dist/src/user.decorator.d.ts",
+      "default": "./dist/src/user.decorator.js"
     }
   }
 }
