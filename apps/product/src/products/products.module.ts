@@ -5,6 +5,10 @@ import { ApolloFederationDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Product, productSchema } from './entities/product.entity';
+import { AuthGuard } from '@repo/shared/guard';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { secret } from '@repo/shared/secret';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Product.name, schema: productSchema }]),
@@ -14,7 +18,18 @@ import { Product, productSchema } from './entities/product.entity';
         federation: 2,
       },
     }),
+    JwtModule.register({
+      global: true,
+      secret: secret,
+    }),
   ],
-  providers: [ProductsResolver, ProductsService],
+  providers: [
+    ProductsResolver,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    ProductsService,
+  ],
 })
 export class ProductsModule {}

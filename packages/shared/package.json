@@ -89,11 +89,14 @@
       "./userType": {
       "types": "./dist/types/user.type.d.ts",
       "default": "./dist/types/user.type.js"
-    }
-    ,
+    },
       "./guard": {
       "types": "./dist/src/auth.guard.d.ts",
       "default": "./dist/src/auth.guard.js"
+    },
+      "./secret": {
+      "types": "./dist/src/secret.d.ts",
+      "default": "./dist/src/secret.js"
     }
   }
 }

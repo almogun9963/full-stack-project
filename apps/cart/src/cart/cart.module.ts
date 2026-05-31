@@ -6,7 +6,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Cart, cartSchema } from './entities/cart.entity';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from '../auth/auth.gaurd';
+import { AuthGuard } from '@repo/shared/guard';
+import { JwtModule } from '@nestjs/jwt';
+import { secret } from '@repo/shared/secret';
 
 @Module({
   imports: [
@@ -17,10 +19,14 @@ import { AuthGuard } from '../auth/auth.gaurd';
         federation: 2,
       },
     }),
+    JwtModule.register({
+      global: true,
+      secret: secret,
+      signOptions: { expiresIn: '600s' },
+    }),
   ],
   providers: [
     CartResolver,
-
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
