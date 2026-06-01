@@ -20,7 +20,6 @@ export class AuthController {
 
   @Post('refresh')
   refresh(@Req() req: any) {
-    console.log(req);
     return this.authService.refreshTokens(req.body.id, req.body.refreshToken);
   }
 }
