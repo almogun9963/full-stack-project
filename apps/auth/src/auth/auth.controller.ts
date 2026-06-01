@@ -6,9 +6,9 @@ import { CreateUserInput } from 'src/user/dto/create-user.input';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('create')
-  createUser(@Body() createUserInput: CreateUserInput) {
-    return this.authService.create(createUserInput);
+  @Post('signUp')
+  signUp(@Body() createUserInput: CreateUserInput) {
+    return this.authService.signUp(createUserInput);
   }
 
   @HttpCode(HttpStatus.OK)

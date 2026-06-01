@@ -11,7 +11,7 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { CreateUserInput } from 'src/user/dto/create-user.input';
 import * as jwt from 'jsonwebtoken';
-import { secret, secretRefreshToken } from '@repo/shared/secret';
+import { secretRefreshToken } from '@repo/shared/secret';
 
 @Injectable()
 export class AuthService {
@@ -21,17 +21,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(createUserInput: CreateUserInput) {
-    const { password, ...rest } = createUserInput;
-
-    if (!password) {
-      throw new Error('Password is required');
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
+  async signUp(createUserInput: CreateUserInput) {
+    const hashedPassword = await bcrypt.hash(
+      createUserInput?.password || '',
+      10,
+    );
 
     const createdUser = await this.userModel.create({
-      ...rest,
+      ...createUserInput,
       password: hashedPassword,
     });
 
@@ -65,16 +62,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const userId = String(user.id);
+    const userId = user._id.toString();
     const payload = { id: userId, username: user.userName ?? '' };
-    const userFromDb: User | null = await this.userModel
-      .findById(userId)
-      .exec();
 
-    let refreshToken = userFromDb?.refreshToken;
+    let refreshToken = user?.refreshToken;
 
     if (!refreshToken) {
-      refreshToken = await this.createnewRefreshToken(userId, payload);
+      refreshToken = await this.createRefreshToken(userId, payload);
       console.log('No refresh token found, created new one');
     } else {
       try {
@@ -82,7 +76,7 @@ export class AuthService {
         console.log('Refresh token is valid');
       } catch {
         console.log('Invalid refresh token, creating new one');
-        refreshToken = await this.createnewRefreshToken(userId, payload);
+        refreshToken = await this.createRefreshToken(userId, payload);
       }
     }
 
@@ -103,7 +97,7 @@ export class AuthService {
     };
   }
 
-  async createnewRefreshToken(
+  async createRefreshToken(
     userId: string,
     payload: { id: string; username: string },
   ) {
