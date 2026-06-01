@@ -1,14 +1,15 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { CartService } from './cart.service';
 import { Cart } from './entities/cart.entity';
-import { CreateCartInput } from './dto/create-cart.input';
+import { getUser } from '@repo/shared/userDecorator';
+
 @Resolver(() => Cart)
 export class CartResolver {
   constructor(private readonly cartService: CartService) {}
 
   @Mutation(() => Cart)
-  createCart(@Args('createCartInput') createCartInput: CreateCartInput) {
-    return this.cartService.create(createCartInput);
+  createCart(@getUser('userId') userId: string) {
+    return this.cartService.create(userId);
   }
 
   @Query(() => Cart, { name: 'getCart' })

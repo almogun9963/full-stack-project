@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCartInput } from './dto/create-cart.input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cart } from './entities/cart.entity';
 import { Model } from 'mongoose';
+
 @Injectable()
 export class CartService {
   constructor(@InjectModel(Cart.name) private cartModel: Model<Cart>) {}
 
-  async create(createCartInput: CreateCartInput) {
-    const createdCart = new this.cartModel(createCartInput);
+  async create(userId: string) {
+    const createdCart = new this.cartModel({ userId });
     const savedCart = await createdCart.save();
     return savedCart;
   }

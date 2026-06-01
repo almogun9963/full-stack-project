@@ -16,8 +16,8 @@ export class User implements UserType {
   @Prop()
   password?: string;
 
-  @Field()
-  @Prop()
+  @Field({ nullable: true })
+  @Prop({ nullable: true })
   refreshToken?: string;
 }
 

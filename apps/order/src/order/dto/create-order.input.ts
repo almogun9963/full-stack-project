@@ -4,7 +4,4 @@ import { InputType, Field } from '@nestjs/graphql';
 export class CreateOrderInput {
   @Field()
   cartId?: string;
-
-  @Field()
-  userId?: string;
 }

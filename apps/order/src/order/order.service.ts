@@ -8,8 +8,8 @@ import { InjectModel } from '@nestjs/mongoose';
 export class OrderService {
   constructor(@InjectModel(Order.name) private orderModel: Model<Order>) {}
 
-  async create(createOrderInput: CreateOrderInput) {
-    const createdOrder = new this.orderModel(createOrderInput);
+  async create(userId: string, createOrderInput: CreateOrderInput) {
+    const createdOrder = new this.orderModel({ ...createOrderInput, userId });
     const savedOrder = await createdOrder.save();
     return savedOrder;
   }

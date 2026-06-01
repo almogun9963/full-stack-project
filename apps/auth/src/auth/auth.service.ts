@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/user/entities/user.entity';
 import { Model } from 'mongoose';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
@@ -26,7 +26,8 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    if (user?.password !== password) {
+    const isPasswordValid = await bcrypt.compare(password, user.password || '');
+    if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
