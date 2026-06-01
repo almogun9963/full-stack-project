@@ -9,9 +9,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/user/entities/user.entity';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { CreateUserInput } from 'src/user/dto/create-user.input';
 import * as jwt from 'jsonwebtoken';
 import { secretRefreshToken } from '@repo/shared/secret';
+import { SignUpInput } from './dto/sing-up.input';
+import { SignInInput } from './dto/sign-in.input';
+import { RefreshInput } from './dto/refresh,input';
 
 @Injectable()
 export class AuthService {
@@ -21,17 +23,13 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(createUserInput: CreateUserInput) {
-    const hashedPassword = await bcrypt.hash(
-      createUserInput?.password || '',
-      10,
-    );
+  async signUp(loginInput: SignUpInput) {
+    const hashedPassword = await bcrypt.hash(loginInput?.password || '', 10);
 
     const createdUser = await this.userModel.create({
-      ...createUserInput,
+      ...loginInput,
       password: hashedPassword,
     });
-
     const payload = {
       id: String(createdUser.id),
       username: createdUser.userName,
@@ -45,19 +43,23 @@ export class AuthService {
       .findByIdAndUpdate(createdUser.id, { refreshToken })
       .exec();
     const updatedUser = { ...createdUser.toObject(), refreshToken };
+    console.log('User created with refresh token:', updatedUser);
     return updatedUser;
   }
 
   async signIn(
-    id: string,
-    password: string,
+    signInInput: SignInInput,
   ): Promise<{ access_token: string; refresh_token: string }> {
-    const user = await this.userService.findOne(id);
+    const user = await this.userService.findOne(signInInput.id || '');
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password || '');
+    const isPasswordValid: boolean = await bcrypt.compare(
+      signInInput.password ?? '',
+      user.password ?? '',
+    );
+
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -68,7 +70,7 @@ export class AuthService {
     let refreshToken = user?.refreshToken;
 
     if (!refreshToken) {
-      refreshToken = await this.createRefreshToken(userId, payload);
+      refreshToken = await this.generateRefreshToken(userId, payload);
       console.log('No refresh token found, created new one');
     } else {
       try {
@@ -76,9 +78,10 @@ export class AuthService {
         console.log('Refresh token is valid');
       } catch {
         console.log('Invalid refresh token, creating new one');
-        refreshToken = await this.createRefreshToken(userId, payload);
+        refreshToken = await this.generateRefreshToken(userId, payload);
       }
     }
+    console.log('User found for sign-in:', user.userName);
 
     return {
       access_token: await this.jwtService.signAsync(payload),
@@ -86,10 +89,10 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(userId: string, refreshToken: string) {
-    const payload = { id: userId };
-    const user = await this.userModel.findById(userId).exec();
-    if (!user || user.refreshToken !== refreshToken) {
+  async refreshTokens(refreshInput: RefreshInput) {
+    const payload = { id: refreshInput.id || '' };
+    const user = await this.userModel.findById(refreshInput.id || '').exec();
+    if (!user || user.refreshToken !== refreshInput.refreshToken) {
       throw new UnauthorizedException('Invalid refresh token');
     }
     return {
@@ -97,7 +100,7 @@ export class AuthService {
     };
   }
 
-  async createRefreshToken(
+  async generateRefreshToken(
     userId: string,
     payload: { id: string; username: string },
   ) {

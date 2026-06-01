@@ -22,3 +22,6 @@ export class User implements UserType {
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
+
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
