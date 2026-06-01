@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { Request } from 'express';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -10,7 +11,7 @@ import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
       server: {
-        context: ({ req }) => ({ headers: req.headers }),
+        context: ({ req }: { req: Request }) => ({ headers: req.headers }),
       },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
@@ -22,18 +23,26 @@ import { IntrospectAndCompose, RemoteGraphQLDataSource } from '@apollo/gateway';
           ],
         }),
         buildService({ url }) {
-          return new RemoteGraphQLDataSource({
+          return new RemoteGraphQLDataSource<{
+            headers?: Record<string, string>;
+          }>({
             url,
-            willSendRequest({ request, context }) {
-              const incomingHeaders = (context as any).headers;
+            willSendRequest({
+              request,
+              context,
+            }: {
+              request?: {
+                http?: { headers: { set(name: string, value: string): void } };
+              };
+              context?: { headers?: Record<string, string> };
+            }) {
+              const incomingHeaders = context?.headers;
 
-              if (incomingHeaders) {
-                if (incomingHeaders.authorization) {
-                  request?.http?.headers.set(
-                    'authorization',
-                    incomingHeaders.authorization,
-                  );
-                }
+              if (incomingHeaders?.authorization) {
+                request?.http?.headers.set(
+                  'authorization',
+                  incomingHeaders.authorization,
+                );
               }
             },
           });
