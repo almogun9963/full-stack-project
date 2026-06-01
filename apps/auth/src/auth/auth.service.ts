@@ -9,6 +9,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/user/entities/user.entity';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { CreateUserInput } from 'src/user/dto/create-user.input';
+import * as jwt from 'jsonwebtoken';
+import { secret, secretRefreshToken } from '@repo/shared/secret';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -16,6 +20,36 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
+
+  async create(createUserInput: CreateUserInput) {
+    const { password, ...rest } = createUserInput;
+
+    if (!password) {
+      throw new Error('Password is required');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const createdUser = await this.userModel.create({
+      ...rest,
+      password: hashedPassword,
+    });
+
+    const payload = {
+      id: String(createdUser.id),
+      username: createdUser.userName,
+    };
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: secretRefreshToken,
+      expiresIn: '7d',
+    });
+
+    await this.userModel
+      .findByIdAndUpdate(createdUser.id, { refreshToken })
+      .exec();
+    const updatedUser = { ...createdUser.toObject(), refreshToken };
+    return updatedUser;
+  }
 
   async signIn(
     id: string,
@@ -31,13 +65,27 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { id: String(user.id), username: user.userName };
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: 'REFRESH_TOKEN_SECRET',
-      expiresIn: '7d',
-    });
+    const userId = String(user.id);
+    const payload = { id: userId, username: user.userName ?? '' };
+    const userFromDb: User | null = await this.userModel
+      .findById(userId)
+      .exec();
 
-    await this.userModel.findByIdAndUpdate(user.id, { refreshToken }).exec();
+    let refreshToken = userFromDb?.refreshToken;
+
+    if (!refreshToken) {
+      refreshToken = await this.createnewRefreshToken(userId, payload);
+      console.log('No refresh token found, created new one');
+    } else {
+      try {
+        jwt.verify(refreshToken, secretRefreshToken);
+        console.log('Refresh token is valid');
+      } catch {
+        console.log('Invalid refresh token, creating new one');
+        refreshToken = await this.createnewRefreshToken(userId, payload);
+      }
+    }
+
     return {
       access_token: await this.jwtService.signAsync(payload),
       refresh_token: refreshToken,
@@ -53,5 +101,21 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async createnewRefreshToken(
+    userId: string,
+    payload: { id: string; username: string },
+  ) {
+    const newRefreshToken = await this.jwtService.signAsync(payload, {
+      secret: secretRefreshToken,
+      expiresIn: '7d',
+    });
+
+    await this.userModel
+      .findByIdAndUpdate(userId, { refreshToken: newRefreshToken })
+      .exec();
+
+    return newRefreshToken;
   }
 }

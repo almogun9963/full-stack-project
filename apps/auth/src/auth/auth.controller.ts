@@ -1,9 +1,15 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { CreateUserInput } from 'src/user/dto/create-user.input';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('create')
+  createUser(@Body() createUserInput: CreateUserInput) {
+    return this.authService.create(createUserInput);
+  }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
