@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -30,10 +31,12 @@ export class AuthService {
       ...loginInput,
       password: hashedPassword,
     });
+
     const payload = {
       id: String(createdUser.id),
       username: createdUser.userName,
     };
+
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: secretRefreshToken,
       expiresIn: '7d',
@@ -51,6 +54,7 @@ export class AuthService {
     signInInput: SignInInput,
   ): Promise<{ access_token: string; refresh_token: string }> {
     const user = await this.userService.findOne(signInInput.id || '');
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -64,7 +68,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const userId = user._id.toString();
+    const userId = user.id ?? '';
+    if (!userId) {
+      throw new UnauthorizedException('Invalid user id');
+    }
     const payload = { id: userId, username: user.userName ?? '' };
 
     let refreshToken = user?.refreshToken;

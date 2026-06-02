@@ -1,11 +1,22 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose'; // Import Types
 import { UserType } from '@repo/shared/userType';
 
 @ObjectType()
-@Schema()
+@Schema({
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
 export class User implements UserType {
   @Field(() => ID)
+  @Prop({
+    type: String,
+    get: function (this: Document & { _id?: Types.ObjectId }) {
+      const id = this._id as Types.ObjectId | undefined;
+      return id;
+    },
+  })
   id?: string;
 
   @Field()
@@ -23,5 +34,5 @@ export class User implements UserType {
 
 export const userSchema = SchemaFactory.createForClass(User);
 
-userSchema.set('toObject', { virtuals: true });
-userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { getters: true, virtuals: true });
+userSchema.set('toJSON', { getters: true, virtuals: true });

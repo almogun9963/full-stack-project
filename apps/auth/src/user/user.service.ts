@@ -8,6 +8,6 @@ export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
   async findOne(id: string) {
     const user = await this.userModel.findById(id).exec();
-    return user;
+    return user ? (user.toObject() as User) : null;
   }
 }
