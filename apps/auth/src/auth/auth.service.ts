@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { AuthRepository } from './auth.repository';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly userService: UserService,
@@ -47,7 +49,7 @@ export class AuthService {
       ...createdUser,
       refreshToken,
     };
-    console.log('User created with refresh token:', updatedUser);
+    this.logger.log('User created with refresh token:', updatedUser);
     return updatedUser;
   }
 
@@ -79,17 +81,17 @@ export class AuthService {
 
     if (!refreshToken) {
       refreshToken = await this.generateRefreshToken(userId, payload);
-      console.log('No refresh token found, created new one');
+      this.logger.log('No refresh token found, created new one');
     } else {
       try {
         jwt.verify(refreshToken, secretRefreshToken);
-        console.log('Refresh token is valid');
+        this.logger.log('Refresh token is valid');
       } catch {
-        console.log('Invalid refresh token, creating new one');
+        this.logger.log('Invalid refresh token, creating new one');
         refreshToken = await this.generateRefreshToken(userId, payload);
       }
     }
-    console.log('User found for sign-in:', user.userName);
+    this.logger.log('User found for sign-in:', user.userName);
 
     return {
       access_token: await this.jwtService.signAsync(payload),

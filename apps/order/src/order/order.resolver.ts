@@ -17,7 +17,6 @@ export class OrderResolver {
 
   @Query(() => [Order], { name: 'getOrdersByUser' })
   getOrdersByUser(@getUser('userId') userId: string) {
-    console.log('Fetching orders for user:', userId);
     return this.orderService.getOrdersByUser(userId);
   }
 }
