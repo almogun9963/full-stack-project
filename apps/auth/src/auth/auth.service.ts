@@ -1,25 +1,23 @@
 import {
   Injectable,
-  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/user/entities/user.entity';
-import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { secretRefreshToken } from '@repo/shared/secret';
 import { SignUpInput } from './dto/sing-up.input';
 import { SignInInput } from './dto/sign-in.input';
 import { RefreshInput } from './dto/refresh,input';
+import { AuthRepository } from './auth.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly authRepository: AuthRepository,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
@@ -27,13 +25,15 @@ export class AuthService {
   async signUp(loginInput: SignUpInput) {
     const hashedPassword = await bcrypt.hash(loginInput?.password || '', 10);
 
-    const createdUser = await this.userModel.create({
+    const createdUser = (await this.authRepository.create({
       ...loginInput,
       password: hashedPassword,
-    });
+    })) as User;
+
+    const userId = String(createdUser.id ?? '');
 
     const payload = {
-      id: String(createdUser.id),
+      id: userId,
       username: createdUser.userName,
     };
 
@@ -42,10 +42,11 @@ export class AuthService {
       expiresIn: '7d',
     });
 
-    await this.userModel
-      .findByIdAndUpdate(createdUser.id, { refreshToken })
-      .exec();
-    const updatedUser = { ...createdUser.toObject(), refreshToken };
+    await this.authRepository.updateRefreshToken(userId, refreshToken);
+    const updatedUser: User = {
+      ...createdUser,
+      refreshToken,
+    };
     console.log('User created with refresh token:', updatedUser);
     return updatedUser;
   }
@@ -98,7 +99,9 @@ export class AuthService {
 
   async refreshTokens(refreshInput: RefreshInput) {
     const payload = { id: refreshInput.id || '' };
-    const user = await this.userModel.findById(refreshInput.id || '').exec();
+    const user = (await this.authRepository.findById(
+      refreshInput.id || '',
+    )) as User | null;
     if (!user || user.refreshToken !== refreshInput.refreshToken) {
       throw new UnauthorizedException('Invalid refresh token');
     }
@@ -116,9 +119,7 @@ export class AuthService {
       expiresIn: '7d',
     });
 
-    await this.userModel
-      .findByIdAndUpdate(userId, { refreshToken: newRefreshToken })
-      .exec();
+    await this.authRepository.updateRefreshToken(userId, newRefreshToken);
 
     return newRefreshToken;
   }
