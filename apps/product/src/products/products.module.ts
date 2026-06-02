@@ -9,6 +9,7 @@ import { AuthGuard } from '@repo/shared/guard';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { secret } from '@repo/shared/secret';
+import { ProductsRepository } from './products.repository';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Product.name, schema: productSchema }]),
@@ -30,6 +31,7 @@ import { secret } from '@repo/shared/secret';
       useClass: AuthGuard,
     },
     ProductsService,
+    ProductsRepository,
   ],
 })
 export class ProductsModule {}
