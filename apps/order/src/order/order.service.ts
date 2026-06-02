@@ -1,20 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { OrderRepository } from './order.repository';
 import { CreateOrderInput } from './dto/create-order.input';
-import { Order } from './entities/order.entity';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class OrderService {
-  constructor(@InjectModel(Order.name) private orderModel: Model<Order>) {}
+  constructor(private orderRepository: OrderRepository) {}
 
   async create(userId: string, createOrderInput: CreateOrderInput) {
-    const createdOrder = new this.orderModel({ ...createOrderInput, userId });
-    const savedOrder = await createdOrder.save();
-    return savedOrder;
+    return this.orderRepository.create(userId, createOrderInput);
   }
 
   async getOrdersByUser(userId: string) {
-    return await this.orderModel.find({ userId }).exec();
+    return this.orderRepository.findByUserId(userId);
   }
 }
