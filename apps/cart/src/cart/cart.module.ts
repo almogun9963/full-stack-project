@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from '@repo/shared/guard';
 import { JwtModule } from '@nestjs/jwt';
 import { secret } from '@repo/shared/secret';
+import { CartRepository } from './cart.repository';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { secret } from '@repo/shared/secret';
       useClass: AuthGuard,
     },
     CartService,
+    CartRepository,
   ],
 })
 export class CartModule {}

@@ -1,20 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Cart } from './entities/cart.entity';
-import { Model } from 'mongoose';
+import { CartRepository } from './cart.repository';
 
 @Injectable()
 export class CartService {
-  constructor(@InjectModel(Cart.name) private cartModel: Model<Cart>) {}
+  constructor(private cartRepository: CartRepository) {}
 
   async create(userId: string) {
-    const createdCart = new this.cartModel({ userId });
-    const savedCart = await createdCart.save();
-    return savedCart;
+    return this.cartRepository.create(userId);
   }
 
   async getCartById(id: string) {
-    const cart = await this.cartModel.findOne({ _id: id }).exec();
+    const cart = await this.cartRepository.findById(id);
 
     if (cart == null) {
       throw new Error('Cart with id ' + id + ' not found');
@@ -24,34 +20,15 @@ export class CartService {
   }
 
   async addToCart(id: string, productIdToAdd: string) {
-    const result = await this.cartModel
-      .findOneAndUpdate(
-        { _id: id },
-        { $push: { productsIds: productIdToAdd } },
-        { new: true },
-      )
-      .exec();
-
-    return result;
+    return this.cartRepository.addProduct(id, productIdToAdd);
   }
 
   async removeFromCart(id: string, productIdToRemove: string) {
-    const result = await this.cartModel
-      .findOneAndUpdate(
-        { _id: id },
-        { $pull: { productsIds: productIdToRemove } },
-        { new: true },
-      )
-      .exec();
-
-    return result;
+    return this.cartRepository.removeProduct(id, productIdToRemove);
   }
 
   async deleteCart(id: string) {
-    await this.cartModel
-      .findOneAndUpdate({ _id: id }, { deletedAt: new Date() }, { new: true })
-      .exec();
-
+    await this.cartRepository.softDelete(id);
     return 'Cart with id ' + id + ' has been deleted';
   }
 }
