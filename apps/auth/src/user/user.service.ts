@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User } from './entities/user.entity';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(private userRepository: UserRepository) {}
+
   async findOne(id: string) {
-    const user = await this.userModel.findById(id).exec();
-    return user ? (user.toObject() as User) : null;
+    return this.userRepository.findOne(id);
   }
 }
