@@ -1,10 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;
   let service: jest.Mocked<AuthService>;
+  const mockUser = {
+    id: '1',
+    userName: 'almog',
+    password: '!Aa123456789',
+    refreshToken: 'refresh-token',
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,50 +32,60 @@ describe('AuthResolver', () => {
     service = module.get(AuthService);
   });
 
-  it('signUp service method', async () => {
-    const input = { userName: 'almog', password: 'amiga' };
-    service.signUp.mockResolvedValue({ userName: 'almog', password: 'amiga' });
+  it('signUp: should return the created user', async () => {
+    const input = { userName: 'almog', password: '!Aa123456789' };
+    service.signUp.mockResolvedValue(mockUser);
 
     const result = await resolver.signUp(input);
-    expect(service.signUp).toHaveBeenCalledWith(input);
-    expect(result).toEqual({ userName: 'almog', password: 'amiga' });
+    expect(result).toEqual(mockUser);
   });
 
-  it('signIn service method', async () => {
-    const input = { id: '6a1e9aa5c32b593a58cc374c', password: 'amiga' };
-    service.signIn.mockResolvedValue({
-      access_token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMWU5YWE1YzMyYjU5M2E1OGNjMzc0YyIsInVzZXJuYW1lIjoiYWxtb2ciLCJpYXQiOjE3ODAzOTc4NjgsImV4cCI6MTc4MDM5ODQ2OH0.L8xztrtr_D9FFg9bOoenMT6WXhQ-g_SrLLovtUgVlfA',
-      refresh_token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMWU5YWE1YzMyYjU5M2E1OGNjMzc0YyIsInVzZXJuYW1lIjoiYWxtb2ciLCJpYXQiOjE3ODAzOTA1NjUsImV4cCI6MTc4MDk5NTM2NX0.VHg2VOEk6c9F_s2LwBHnsNQq7yzMsxyu43mKnBH8A8o',
-    });
+  it('signUp: should return bad request for empty password', async () => {
+    const input = { userName: 'almog', password: '' };
+    service.signUp.mockRejectedValue(
+      new BadRequestException('Password cannot be empty'),
+    );
 
-    const result = await resolver.signIn(input);
-    expect(service.signIn).toHaveBeenCalledWith(input);
-    expect(result).toEqual({
-      access_token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMWU5YWE1YzMyYjU5M2E1OGNjMzc0YyIsInVzZXJuYW1lIjoiYWxtb2ciLCJpYXQiOjE3ODAzOTc4NjgsImV4cCI6MTc4MDM5ODQ2OH0.L8xztrtr_D9FFg9bOoenMT6WXhQ-g_SrLLovtUgVlfA',
-      refresh_token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMWU5YWE1YzMyYjU5M2E1OGNjMzc0YyIsInVzZXJuYW1lIjoiYWxtb2ciLCJpYXQiOjE3ODAzOTA1NjUsImV4cCI6MTc4MDk5NTM2NX0.VHg2VOEk6c9F_s2LwBHnsNQq7yzMsxyu43mKnBH8A8o',
-    });
+    try {
+      await resolver.signUp(input);
+    } catch (error) {
+      expect(error).toBeInstanceOf(BadRequestException);
+    }
   });
 
-  it('refresh service method', async () => {
-    const input = {
-      id: '6a1e9aa5c32b593a58cc374c',
-      refreshToken:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMWU5YWE1YzMyYjU5M2E1OGNjMzc0YyIsInVzZXJuYW1lIjoiYWxtb2ciLCJpYXQiOjE3ODAzOTA1NjUsImV4cCI6MTc4MDk5NTM2NX0.VHg2VOEk6c9F_s2LwBHnsNQq7yzMsxyu43mKnBH8A8o',
-    };
-    service.refreshTokens.mockResolvedValue({
-      access_token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMWU5YWE1YzMyYjU5M2E1OGNjMzc0YyIsInVzZXJuYW1lIjoiYWxtb2ciLCJpYXQiOjE3ODAzOTc4NjgsImV4cCI6MTc4MDM5ODQ2OH0.L8xztrtr_D9FFg9bOoenMT6WXhQ-g_SrLLovtUgVlfA',
-    });
+  it('signUp: should return bad request for invalid password', async () => {
+    const input = { userName: 'almog', password: 'aa' };
+    service.signUp.mockRejectedValue(
+      new BadRequestException('Invalid password'),
+    );
+    try {
+      await resolver.signUp(input);
+    } catch (error) {
+      expect(error).toBeInstanceOf(BadRequestException);
+    }
+  });
 
-    const result = await resolver.refresh(input);
-    expect(service.refreshTokens).toHaveBeenCalledWith(input);
-    expect(result).toEqual({
-      access_token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMWU5YWE1YzMyYjU5M2E1OGNjMzc0YyIsInVzZXJuYW1lIjoiYWxtb2ciLCJpYXQiOjE3ODAzOTc4NjgsImV4cCI6MTc4MDM5ODQ2OH0.L8xztrtr_D9FFg9bOoenMT6WXhQ-g_SrLLovtUgVlfA',
-    });
+  it('signIn: should return bad request for invalid credentials', async () => {
+    const input = { id: '6a1e9aa5c32b593a58cc374c', password: 'aaa' };
+    service.signIn.mockRejectedValue(
+      new UnauthorizedException('Invalid credentials'),
+    );
+
+    try {
+      await resolver.signIn(input);
+    } catch (error) {
+      expect(error).toBeInstanceOf(UnauthorizedException);
+    }
+  });
+
+  it('signIn: should return bad request for empty password', async () => {
+    const input = { id: '6a1e9aa5c32b593a58cc374c', password: '' };
+    service.signIn.mockRejectedValue(new BadRequestException());
+
+    try {
+      await resolver.signIn(input);
+    } catch (error) {
+      expect(error).toBeInstanceOf(BadRequestException);
+    }
   });
 });

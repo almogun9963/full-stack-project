@@ -36,8 +36,7 @@ export class ProductsRepository {
 
       return this.productModel.find(filtersToMongo).exec();
     }
-    const aaa = await this.productModel.find().exec();
-    console.log(aaa);
+
     return this.productModel.find().exec();
   }
 

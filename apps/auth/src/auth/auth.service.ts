@@ -45,12 +45,12 @@ export class AuthService {
     });
 
     await this.authRepository.updateRefreshToken(userId, refreshToken);
-    const updatedUser: User = {
-      ...createdUser,
+    return {
+      id: userId,
+      userName: createdUser.userName,
+      password: createdUser.password,
       refreshToken,
     };
-    this.logger.log('User created with refresh token:', updatedUser);
-    return updatedUser;
   }
 
   async signIn(

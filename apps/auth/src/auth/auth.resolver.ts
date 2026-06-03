@@ -12,7 +12,7 @@ export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
   @Mutation(() => User)
-  signUp(@Args('SignUpInput') signUpInput: SignUpInput) {
+  async signUp(@Args('SignUpInput') signUpInput: SignUpInput) {
     return this.authService.signUp(signUpInput);
   }
 
@@ -22,7 +22,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => TokenResponse)
-  refresh(@Args('RefreshInput') refreshInput: RefreshInput) {
+  async refresh(@Args('RefreshInput') refreshInput: RefreshInput) {
     return this.authService.refreshTokens(refreshInput);
   }
 }
