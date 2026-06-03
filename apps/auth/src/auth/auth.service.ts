@@ -10,9 +10,9 @@ import { User } from 'src/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { secretRefreshToken } from '@repo/shared/secret';
-import { SignUpInput } from './dto/sing-up.input';
+import { SignUpInput } from './dto/sign-up.input';
 import { SignInInput } from './dto/sign-in.input';
-import { RefreshInput } from './dto/refresh,input';
+import { RefreshInput } from './dto/refresh.input';
 import { AuthRepository } from './auth.repository';
 
 @Injectable()
@@ -48,7 +48,6 @@ export class AuthService {
     return {
       id: userId,
       userName: createdUser.userName,
-      password: createdUser.password,
       refreshToken,
     };
   }
