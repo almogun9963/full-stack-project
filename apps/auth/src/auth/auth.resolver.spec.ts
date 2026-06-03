@@ -33,7 +33,7 @@ describe('AuthResolver', () => {
   });
 
   it('signUp: should return the created user', async () => {
-    const input = { userName: 'almog', password: '!Aa123456789' };
+    const input = { userName: mockUser.userName, password: mockUser.password };
     service.signUp.mockResolvedValue(mockUser);
 
     const result = await resolver.signUp(input);
@@ -41,7 +41,7 @@ describe('AuthResolver', () => {
   });
 
   it('signUp: should return bad request for empty password', async () => {
-    const input = { userName: 'almog', password: '' };
+    const input = { userName: mockUser.userName, password: '' };
     service.signUp.mockRejectedValue(
       new BadRequestException('Password cannot be empty'),
     );
@@ -54,7 +54,7 @@ describe('AuthResolver', () => {
   });
 
   it('signUp: should return bad request for invalid password', async () => {
-    const input = { userName: 'almog', password: 'aa' };
+    const input = { userName: mockUser.userName, password: 'aa' };
     service.signUp.mockRejectedValue(
       new BadRequestException('Invalid password'),
     );
@@ -66,7 +66,7 @@ describe('AuthResolver', () => {
   });
 
   it('signIn: should return bad request for invalid credentials', async () => {
-    const input = { id: '6a1e9aa5c32b593a58cc374c', password: 'aaa' };
+    const input = { id: mockUser.id, password: 'aaa' };
     service.signIn.mockRejectedValue(
       new UnauthorizedException('Invalid credentials'),
     );
@@ -79,7 +79,7 @@ describe('AuthResolver', () => {
   });
 
   it('signIn: should return bad request for empty password', async () => {
-    const input = { id: '6a1e9aa5c32b593a58cc374c', password: '' };
+    const input = { id: mockUser.id, password: '' };
     service.signIn.mockRejectedValue(new BadRequestException());
 
     try {
