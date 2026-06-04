@@ -1,6 +1,14 @@
 export enum Tag {
-  North = "North",
-  East = "East",
-  South = "South",
-  West = "West",
+  Gaming = "Gaming",
+  Laptop = "Laptop",
+  Computer = "Computer",
+  FourK = "4K",
+  Wireless = "Wireless",
+  RGB = "RGB",
+  Performance = "Performance",
+  Budget = "Budget",
+  Pro = "Pro",
+  Compact = "Compact",
+  UltraHD = "Ultra HD",
+  Fast = "Fast",
 }
