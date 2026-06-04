@@ -15,6 +15,7 @@ import { UserRepository } from './user.repository';
       autoSchemaFile: {
         federation: 2,
       },
+      context: ({ req, res }) => ({ req, res }),
     }),
   ],
   providers: [UserResolver, UserService, UserRepository],

@@ -14,6 +14,7 @@ import { SignUpInput } from './dto/sign-up.input';
 import { SignInInput } from './dto/sign-in.input';
 import { RefreshInput } from './dto/refresh.input';
 import { AuthRepository } from './auth.repository';
+import { TokenResponse } from './entities/token.response';
 
 @Injectable()
 export class AuthService {
@@ -45,16 +46,17 @@ export class AuthService {
     });
 
     await this.authRepository.updateRefreshToken(userId, refreshToken);
+
+    const accessToken = await this.jwtService.signAsync(payload);
     return {
       id: userId,
       userName: createdUser.userName,
+      accessToken,
       refreshToken,
     };
   }
 
-  async signIn(
-    signInInput: SignInInput,
-  ): Promise<{ access_token: string; refresh_token: string }> {
+  async signIn(signInInput: SignInInput): Promise<TokenResponse> {
     const user = await this.userService.findOne(signInInput.id || '');
 
     if (!user) {
@@ -93,8 +95,8 @@ export class AuthService {
     this.logger.log('User found for sign-in:', user.userName);
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
-      refresh_token: refreshToken,
+      accessToken: await this.jwtService.signAsync(payload),
+      refreshToken: refreshToken,
     };
   }
 
@@ -107,7 +109,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token');
     }
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(payload),
     };
   }
 

@@ -1,24 +1,37 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+// auth.resolver.ts
+import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-
 import { User } from 'src/user/entities/user.entity';
 import { SignUpInput } from './dto/sign-up.input';
 import { SignInInput } from './dto/sign-in.input';
 import { RefreshInput } from './dto/refresh.input';
 import { TokenResponse } from './entities/token.response';
+import type { Request, Response } from 'express';
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
   @Mutation(() => User)
-  async signUp(@Args('signUpInput') signUpInput: SignUpInput) {
-    return this.authService.signUp(signUpInput);
+  async signUp(
+    @Context() context: { res: Response },
+    @Args('signUpInput') signUpInput: SignUpInput,
+  ) {
+    const user = await this.authService.signUp(signUpInput);
+    context.res.cookie('refreshToken', user.refreshToken);
+    context.res.cookie('accessToken', user.accessToken);
+    return user;
   }
 
   @Mutation(() => TokenResponse)
-  async signIn(@Args('signInInput') signInInput: SignInInput) {
-    return this.authService.signIn(signInInput);
+  async signIn(
+    @Context() context: { res: Response },
+    @Args('signInInput') signInInput: SignInInput,
+  ) {
+    const tokens = await this.authService.signIn(signInInput);
+    context.res.cookie('refreshToken', tokens.refreshToken);
+    context.res.cookie('accessToken', tokens.accessToken);
+    return tokens;
   }
 
   @Mutation(() => TokenResponse)

@@ -1,3 +1,4 @@
+// auth.module.ts
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
@@ -7,10 +8,19 @@ import { User, userSchema } from 'src/user/entities/user.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { secret } from '@repo/shared/secret';
 import { AuthRepository } from './auth.repository';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloFederationDriver } from '@nestjs/apollo';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
+    GraphQLModule.forRoot({
+      driver: ApolloFederationDriver,
+      autoSchemaFile: {
+        federation: 2,
+      },
+      context: ({ req, res }) => ({ req, res }),
+    }),
     UserModule,
     JwtModule.register({
       global: true,
