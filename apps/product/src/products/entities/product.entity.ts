@@ -37,7 +37,7 @@ export class Product implements ProductType {
   size?: string;
 
   @Field(() => [Tag])
-  @Prop({ type: [String], enum: Tag, default: [Tag.North] })
+  @Prop({ type: [String], enum: Tag, default: [Tag.Budget] })
   tags?: Tag[];
 
   @Field()
