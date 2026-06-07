@@ -6,7 +6,7 @@ import { SignUpInput } from './dto/sign-up.input';
 import { SignInInput } from './dto/sign-in.input';
 import { RefreshInput } from './dto/refresh.input';
 import { TokenResponse } from './entities/token.response';
-import type { Request, Response } from 'express';
+import type { Response, Request } from 'express';
 
 @Resolver()
 export class AuthResolver {
@@ -14,11 +14,10 @@ export class AuthResolver {
 
   @Mutation(() => User)
   async signUp(
-    @Context() context: { res: Response },
+    @Context() context: { res: Response; req: Request },
     @Args('signUpInput') signUpInput: SignUpInput,
   ) {
     const user = await this.authService.signUp(signUpInput);
-    context.res.cookie('refreshToken', user.refreshToken);
     context.res.cookie('accessToken', user.accessToken);
     return user;
   }
@@ -29,7 +28,6 @@ export class AuthResolver {
     @Args('signInInput') signInInput: SignInInput,
   ) {
     const tokens = await this.authService.signIn(signInInput);
-    context.res.cookie('refreshToken', tokens.refreshToken);
     context.res.cookie('accessToken', tokens.accessToken);
     return tokens;
   }

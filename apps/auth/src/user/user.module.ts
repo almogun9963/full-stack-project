@@ -6,6 +6,7 @@ import { User, userSchema } from './entities/user.entity';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
+import { Request, Response } from 'express';
 
 @Module({
   imports: [
@@ -15,7 +16,10 @@ import { UserRepository } from './user.repository';
       autoSchemaFile: {
         federation: 2,
       },
-      context: ({ req, res }) => ({ req, res }),
+      context: ({ req, res }: { req: Request; res: Response }) => ({
+        req,
+        res,
+      }),
     }),
   ],
   providers: [UserResolver, UserService, UserRepository],

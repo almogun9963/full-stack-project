@@ -45,7 +45,10 @@ export class AuthService {
       expiresIn: '7d',
     });
 
-    await this.authRepository.updateRefreshToken(userId, refreshToken);
+    await this.authRepository.updateRefreshToken(
+      userId,
+      await bcrypt.hash(refreshToken, 10),
+    );
 
     const accessToken = await this.jwtService.signAsync(payload);
     return {

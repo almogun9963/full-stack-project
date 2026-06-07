@@ -10,6 +10,7 @@ import { secret } from '@repo/shared/secret';
 import { AuthRepository } from './auth.repository';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloFederationDriver } from '@nestjs/apollo';
+import { Request, Response } from 'express';
 
 @Module({
   imports: [
@@ -19,7 +20,10 @@ import { ApolloFederationDriver } from '@nestjs/apollo';
       autoSchemaFile: {
         federation: 2,
       },
-      context: ({ req, res }) => ({ req, res }),
+      context: ({ req, res }: { req: Request; res: Response }) => ({
+        req,
+        res,
+      }),
     }),
     UserModule,
     JwtModule.register({
