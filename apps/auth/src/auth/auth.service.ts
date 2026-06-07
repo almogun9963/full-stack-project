@@ -25,11 +25,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(loginInput: SignUpInput) {
-    const hashedPassword = await bcrypt.hash(loginInput?.password || '', 10);
+  async signUp(signUpInput: SignUpInput) {
+    const hashedPassword = await bcrypt.hash(signUpInput?.password || '', 10);
 
     const createdUser = (await this.authRepository.create({
-      ...loginInput,
+      ...signUpInput,
       password: hashedPassword,
     })) as User;
 

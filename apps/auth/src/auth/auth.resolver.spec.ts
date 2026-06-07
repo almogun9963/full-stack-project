@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 describe('AuthResolver', () => {
   let resolver: AuthResolver;
@@ -10,9 +11,11 @@ describe('AuthResolver', () => {
     id: '1',
     userName: 'almog',
     password: '!Aa123456789',
+    accessToken: 'access-token',
     refreshToken: 'refresh-token',
   };
-
+  const req = {} as Request;
+  const res = {} as Response;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -36,7 +39,7 @@ describe('AuthResolver', () => {
     const input = { userName: mockUser.userName, password: mockUser.password };
     service.signUp.mockResolvedValue(mockUser);
 
-    const result = await resolver.signUp(input);
+    const result = await resolver.signUp({ req, res }, input);
     expect(result).toEqual(mockUser);
   });
 
@@ -47,7 +50,7 @@ describe('AuthResolver', () => {
     );
 
     try {
-      await resolver.signUp(input);
+      await resolver.signUp({ req, res }, input);
     } catch (error) {
       expect(error).toBeInstanceOf(BadRequestException);
     }
@@ -59,7 +62,7 @@ describe('AuthResolver', () => {
       new BadRequestException('Invalid password'),
     );
     try {
-      await resolver.signUp(input);
+      await resolver.signUp({ req, res }, input);
     } catch (error) {
       expect(error).toBeInstanceOf(BadRequestException);
     }
@@ -72,7 +75,7 @@ describe('AuthResolver', () => {
     );
 
     try {
-      await resolver.signIn(input);
+      await resolver.signIn({ res }, input);
     } catch (error) {
       expect(error).toBeInstanceOf(UnauthorizedException);
     }
@@ -83,7 +86,7 @@ describe('AuthResolver', () => {
     service.signIn.mockRejectedValue(new BadRequestException());
 
     try {
-      await resolver.signIn(input);
+      await resolver.signIn({ res }, input);
     } catch (error) {
       expect(error).toBeInstanceOf(BadRequestException);
     }
