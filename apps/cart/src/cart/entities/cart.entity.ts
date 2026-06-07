@@ -1,6 +1,6 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { CartType } from '@repo/shared/cartType';
+import { ObjectType, Field, ID } from "@nestjs/graphql";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { CartType } from "@repo/common-types";
 
 @ObjectType()
 @Schema()

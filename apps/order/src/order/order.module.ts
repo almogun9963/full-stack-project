@@ -1,15 +1,14 @@
-import { Module } from '@nestjs/common';
-import { ApolloFederationDriver } from '@nestjs/apollo';
-import { GraphQLModule } from '@nestjs/graphql';
-import { MongooseModule } from '@nestjs/mongoose';
-import { OrderService } from './order.service';
-import { Order, orderSchema } from './entities/order.entity';
-import { OrderResolver } from './order.resolver';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from '@repo/shared/guard';
-import { JwtModule } from '@nestjs/jwt';
-import { secret } from '@repo/shared/secret';
-import { OrderRepository } from './order.repository';
+import { Module } from "@nestjs/common";
+import { ApolloFederationDriver } from "@nestjs/apollo";
+import { GraphQLModule } from "@nestjs/graphql";
+import { MongooseModule } from "@nestjs/mongoose";
+import { OrderService } from "./order.service";
+import { Order, orderSchema } from "./entities/order.entity";
+import { OrderResolver } from "./order.resolver";
+import { APP_GUARD } from "@nestjs/core";
+import { AuthGuard, secret } from "@repo/common-auth";
+import { JwtModule } from "@nestjs/jwt";
+import { OrderRepository } from "./order.repository";
 
 @Module({
   imports: [

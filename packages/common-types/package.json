@@ -1,10 +1,12 @@
 {
-  "name": "@repo/shared",
-  "version": "1.0.0",
+  "name": "@repo/common-types",
+  "version": "0.0.1",
   "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -67,40 +69,5 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-
-  "exports": {
-    "./productType": {
-      "types": "./dist/types/product.type.d.ts",
-      "default": "./dist/types/product.type.js"
-    },
-    "./tag": {
-      "types": "./dist/types/tag.type.d.ts",
-      "default": "./dist/types/tag.type.js"
-    },
-    "./cartType": {
-      "types": "./dist/types/cart.type.d.ts",
-      "default": "./dist/types/cart.type.js"
-    },
-    "./orderType": {
-      "types": "./dist/types/order.type.d.ts",
-      "default": "./dist/types/order.type.js"
-    },
-      "./userType": {
-      "types": "./dist/types/user.type.d.ts",
-      "default": "./dist/types/user.type.js"
-    },
-      "./guard": {
-      "types": "./dist/src/auth.guard.d.ts",
-      "default": "./dist/src/auth.guard.js"
-    },
-      "./secret": {
-      "types": "./dist/src/secret.d.ts",
-      "default": "./dist/src/secret.js"
-    },
-      "./userDecorator": {
-      "types": "./dist/src/user.decorator.d.ts",
-      "default": "./dist/src/user.decorator.js"
-    }
   }
 }

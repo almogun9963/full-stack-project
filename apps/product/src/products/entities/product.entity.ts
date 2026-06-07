@@ -1,7 +1,6 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ProductType } from '@repo/shared/productType';
-import { Tag } from '@repo/shared/tag';
+import { ObjectType, Field, ID } from "@nestjs/graphql";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { ProductType, Tag } from "@repo/common-types";
 @ObjectType()
 @Schema()
 export class Product implements ProductType {

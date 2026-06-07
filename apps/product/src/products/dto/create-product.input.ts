@@ -1,12 +1,12 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field } from "@nestjs/graphql";
 import {
   IsArray,
   IsBoolean,
   IsEnum,
   IsNumber,
   IsString,
-} from 'class-validator';
-import { Tag } from '@repo/shared/tag';
+} from "class-validator";
+import { Tag } from "@repo/common-types";
 
 @InputType()
 export class CreateProductDto {
