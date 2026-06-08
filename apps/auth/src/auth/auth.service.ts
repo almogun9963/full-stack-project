@@ -98,13 +98,6 @@ export class AuthService {
       throw new UnauthorizedException("Invalid refresh token");
     }
     const presentedToken = refreshInput.refreshToken ?? "";
-    const isTokenMatch = await bcrypt.compare(
-      presentedToken,
-      user.refreshToken,
-    );
-    if (!isTokenMatch) {
-      throw new UnauthorizedException("Invalid refresh token");
-    }
     try {
       jwt.verify(presentedToken, secretRefreshToken);
     } catch {
