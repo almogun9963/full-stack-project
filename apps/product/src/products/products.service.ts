@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { ProductsRepository } from './products.repository';
-import { CreateProductDto } from './dto/create-product.input';
-import { FiltersProductInput } from './dto/filters-product.input';
-import { Product } from './entities/product.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { ProductsRepository } from "./products.repository";
+import { CreateProductDto } from "./dto/create-product.input";
+import { FiltersProductInput } from "./dto/filters-product.input";
+import { Product } from "./entities/product.entity";
 
 @Injectable()
 export class ProductsService {
@@ -20,7 +20,7 @@ export class ProductsService {
     const product = await this.productsRepository.findById(id);
 
     if (product == null) {
-      throw new Error('Product with id ' + id + ' not found');
+      throw new NotFoundException(`Product with id ${id} not found`);
     }
 
     return product;
@@ -28,6 +28,6 @@ export class ProductsService {
 
   async removeProduct(id: string): Promise<string> {
     await this.productsRepository.deleteById(id);
-    return 'Successfully deleted product with id: ' + id;
+    return "Successfully deleted product with id: " + id;
   }
 }

@@ -49,7 +49,7 @@ export class Product implements ProductType {
 
   @Field()
   @Prop()
-  catagory?: string;
+  category?: string;
 }
 
 export const productSchema = SchemaFactory.createForClass(Product);

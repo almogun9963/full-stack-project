@@ -1,4 +1,4 @@
-import { Tag } from './tag.type';
+import { Tag } from "./tag.type";
 
 export interface ProductType {
   id?: string;
@@ -23,5 +23,5 @@ export interface ProductType {
 
   isAvailable?: boolean;
 
-  catagory?: string;
+  category?: string;
 }

@@ -9,6 +9,19 @@ import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { GqlExecutionContext } from "@nestjs/graphql";
 
+type JwtPayload = {
+  sub: string;
+  email?: string;
+  iat?: number;
+  exp?: number;
+  [key: string]: unknown;
+};
+
+type GqlContext = {
+  req: Request;
+  user?: JwtPayload;
+};
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -32,10 +45,11 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verify(token);
-      ctx.getContext().user = payload;
-    } catch (error) {
-      throw new UnauthorizedException(error);
+      const payload = await this.jwtService.verify<JwtPayload>(token);
+      const gqlContext = ctx.getContext() as GqlContext;
+      gqlContext.user = payload;
+    } catch {
+      throw new UnauthorizedException();
     }
     return true;
   }

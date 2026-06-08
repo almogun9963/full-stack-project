@@ -8,12 +8,14 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
-  "devDependencies": {
-    "prettier": "^3.7.4",
-    "turbo": "^2.9.14",
+  "dependencies": {
     "typescript": "5.9.2",
     "@nestjs/mongoose": "^11.0.1",
-     "mongoose": "^7.3.4"
+    "mongoose": "^7.3.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "turbo": "^2.9.14"
   },
   "engines": {
     "node": ">=18"

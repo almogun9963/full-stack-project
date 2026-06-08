@@ -1,17 +1,27 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
-import * as jwt from 'jsonwebtoken';
-import { secret } from './secret';
-import { JwtPayload } from 'jsonwebtoken';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { GqlExecutionContext } from "@nestjs/graphql";
+import * as jwt from "jsonwebtoken";
+import { secret } from "./secret";
+import { JwtPayload } from "jsonwebtoken";
 
 export const getUser = createParamDecorator(
   (_data: string | undefined, ctx: ExecutionContext) => {
     const gqlContext = GqlExecutionContext.create(ctx);
-    const request = gqlContext.getContext().req.headers;
-    const token = request.authorization?.split(' ')[1];
+    const headers = gqlContext.getContext()?.req?.headers;
+    const [type, token] = headers?.authorization?.split(" ") ?? [];
 
-    const decoded = jwt.verify(token, secret);
-
-    return (decoded as JwtPayload).id;
+    try {
+      const decoded = jwt.verify(token, secret) as JwtPayload;
+      if (type !== "Bearer" || !token) {
+        throw new UnauthorizedException();
+      }
+      return decoded.id;
+    } catch {
+      throw new UnauthorizedException();
+    }
   },
 );

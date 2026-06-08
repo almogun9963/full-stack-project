@@ -81,20 +81,8 @@ export class AuthService {
     }
     const payload = { id: userId, username: user.userName ?? "" };
 
-    let refreshToken = user?.refreshToken;
-
-    if (!refreshToken) {
-      refreshToken = await this.generateRefreshToken(userId, payload);
-      this.logger.log("No refresh token found, created new one");
-    } else {
-      try {
-        jwt.verify(refreshToken, secretRefreshToken);
-        this.logger.log("Refresh token is valid");
-      } catch {
-        this.logger.log("Invalid refresh token, creating new one");
-        refreshToken = await this.generateRefreshToken(userId, payload);
-      }
-    }
+    const refreshToken = await this.generateRefreshToken(userId, payload);
+    this.logger.log("Issued new refresh token");
     this.logger.log("User found for sign-in:", user.userName);
 
     return {
@@ -104,15 +92,26 @@ export class AuthService {
   }
 
   async refreshTokens(refreshInput: RefreshInput) {
-    const payload = { id: refreshInput.id || "" };
-    const user = (await this.authRepository.findById(
-      refreshInput.id || "",
-    )) as User | null;
-    if (!user || user.refreshToken !== refreshInput.refreshToken) {
+    const userId = refreshInput.id || "";
+    const user = (await this.authRepository.findById(userId)) as User | null;
+    if (!user?.refreshToken) {
+      throw new UnauthorizedException("Invalid refresh token");
+    }
+    const presentedToken = refreshInput.refreshToken ?? "";
+    const isTokenMatch = await bcrypt.compare(
+      presentedToken,
+      user.refreshToken,
+    );
+    if (!isTokenMatch) {
+      throw new UnauthorizedException("Invalid refresh token");
+    }
+    try {
+      jwt.verify(presentedToken, secretRefreshToken);
+    } catch {
       throw new UnauthorizedException("Invalid refresh token");
     }
     return {
-      accessToken: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync({ id: userId }),
     };
   }
 

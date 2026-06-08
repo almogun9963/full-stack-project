@@ -14,7 +14,7 @@ export class User implements UserType {
     type: String,
     get: function (this: Document & { _id?: Types.ObjectId }) {
       const id = this._id as Types.ObjectId | undefined;
-      return id;
+      return id?.toString();
     },
   })
   id?: string;
@@ -23,11 +23,9 @@ export class User implements UserType {
   @Prop()
   userName?: string;
 
-  @Field()
   @Prop()
   password?: string;
 
-  @Field({ nullable: true })
   @Prop({ nullable: true })
   refreshToken?: string;
 }

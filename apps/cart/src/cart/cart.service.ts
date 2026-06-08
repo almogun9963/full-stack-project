@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { CartRepository } from './cart.repository';
-
+import { CartRepository } from "./cart.repository";
+import { Injectable, NotFoundException } from "@nestjs/common";
 @Injectable()
 export class CartService {
   constructor(private cartRepository: CartRepository) {}
@@ -13,7 +12,7 @@ export class CartService {
     const cart = await this.cartRepository.findById(id);
 
     if (cart == null) {
-      throw new Error('Cart with id ' + id + ' not found');
+      throw new NotFoundException(`Cart with id ${id} not found`);
     }
 
     return cart;
@@ -29,6 +28,6 @@ export class CartService {
 
   async deleteCart(id: string) {
     await this.cartRepository.softDelete(id);
-    return 'Cart with id ' + id + ' has been deleted';
+    return "Cart with id " + id + " has been deleted";
   }
 }

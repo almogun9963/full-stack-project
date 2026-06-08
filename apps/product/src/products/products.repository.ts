@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
-import { Product } from './entities/product.entity';
-import { CreateProductDto } from './dto/create-product.input';
-import { FiltersProductInput } from './dto/filters-product.input';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { FilterQuery, Model } from "mongoose";
+import { Product } from "./entities/product.entity";
+import { CreateProductDto } from "./dto/create-product.input";
+import { FiltersProductInput } from "./dto/filters-product.input";
 
 @Injectable()
 export class ProductsRepository {
@@ -20,10 +20,16 @@ export class ProductsRepository {
     if (filters != null) {
       const filtersToMongo: FilterQuery<Product> = {};
       if (filters.price != null) {
-        filtersToMongo.price = {
-          $gte: filters.price.from,
-          $lte: filters.price.to,
-        };
+        const priceFilter: Record<string, number> = {};
+        if (filters.price.from != null) {
+          priceFilter.$gte = filters.price.from;
+        }
+        if (filters.price.to != null) {
+          priceFilter.$lte = filters.price.to;
+        }
+        if (Object.keys(priceFilter).length > 0) {
+          filtersToMongo.price = priceFilter;
+        }
       }
 
       if (filters.company != null) {

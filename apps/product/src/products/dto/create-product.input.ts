@@ -53,5 +53,5 @@ export class CreateProductDto {
 
   @Field()
   @IsString()
-  catagory?: string;
+  category?: string;
 }
