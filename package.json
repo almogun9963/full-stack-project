@@ -3,19 +3,14 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run start:dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
-  "dependencies": {
-    "typescript": "5.9.2",
-    "@nestjs/mongoose": "^11.0.1",
-    "mongoose": "^7.3.4"
-  },
   "devDependencies": {
-    "prettier": "^3.7.4",
-    "turbo": "^2.9.14"
+    "prettier": "3.4.2",
+    "turbo": "2.9.14"
   },
   "engines": {
     "node": ">=18"
@@ -24,5 +19,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+    "overrides": {
+    "@apollo/server": "5.5.1"
+  }
 }
