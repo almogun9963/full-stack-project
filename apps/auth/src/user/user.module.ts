@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
-import { ApolloFederationDriver } from '@nestjs/apollo';
-import { GraphQLModule } from '@nestjs/graphql';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, userSchema } from './entities/user.entity';
-import { UserResolver } from './user.resolver';
-import { UserService } from './user.service';
-import { UserRepository } from './user.repository';
-import { Request, Response } from 'express';
+import { Module } from "@nestjs/common";
+import { ApolloFederationDriver } from "@nestjs/apollo";
+import { GraphQLModule } from "@nestjs/graphql";
+import { MongooseModule } from "@nestjs/mongoose";
+import { User, userSchema } from "./entities/user.entity";
+import { UserResolver } from "./user.resolver";
+import { UserService } from "./user.service";
+import { UserRepository } from "./user.repository";
+import { Request, Response } from "express";
 
 @Module({
   imports: [

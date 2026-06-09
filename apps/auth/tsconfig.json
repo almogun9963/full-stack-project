@@ -3,7 +3,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "resolvePackageJsonExports": true,
-    "esModuleInterop": true,
+    "esModuleInterport": true,
     "isolatedModules": true,
     "declaration": true,
     "removeComments": true,
@@ -21,9 +21,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "types": ["jest", "node"],
     "paths": {
-      "@repo/*": ["../../packages/*"]
+      "@repo/*": ["../../packages/*/dist"]
     }
   }
 }

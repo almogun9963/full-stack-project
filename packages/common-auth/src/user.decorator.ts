@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import * as jwt from "jsonwebtoken";
-import { secret } from "./secret";
+import { secret } from "./secret.js";
 import { JwtPayload } from "jsonwebtoken";
 
 export const getUser = createParamDecorator(
