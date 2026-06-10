@@ -19,6 +19,7 @@ describe("AuthResolver", () => {
     cookie: jest.fn(),
   } as unknown as Response;
   beforeEach(async () => {
+    (res.cookie as jest.Mock).mockClear();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthResolver,
@@ -42,7 +43,13 @@ describe("AuthResolver", () => {
     service.signUp.mockResolvedValue(mockUser);
 
     const result = await resolver.signUp({ req, res }, input);
+
     expect(result).toEqual(mockUser);
+    expect(res.cookie).toHaveBeenCalledWith(
+      "accessToken",
+      mockUser.accessToken,
+      expect.objectContaining({ httpOnly: true }),
+    );
   });
 
   it("signUp: should return bad request for empty password", async () => {
@@ -51,11 +58,9 @@ describe("AuthResolver", () => {
       new BadRequestException("Password cannot be empty"),
     );
 
-    try {
-      await resolver.signUp({ req, res }, input);
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestException);
-    }
+    await expect(resolver.signUp({ req, res }, input)).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
   });
 
   it("signUp: should return bad request for invalid password", async () => {
@@ -63,34 +68,44 @@ describe("AuthResolver", () => {
     service.signUp.mockRejectedValue(
       new BadRequestException("Invalid password"),
     );
-    try {
-      await resolver.signUp({ req, res }, input);
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestException);
-    }
+
+    await expect(resolver.signUp({ req, res }, input)).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
   });
 
-  it("signIn: should return bad request for invalid credentials", async () => {
-    const input = { id: mockUser.id, password: "aaa" };
+  it("signIn: should sign you in", async () => {
+    const input = { username: mockUser.userName, password: "aaa" };
+
+    service.signIn.mockResolvedValue(mockUser);
+
+    const result = await resolver.signIn({ res }, input);
+
+    expect(result).toEqual(mockUser);
+    expect(res.cookie).toHaveBeenCalledWith(
+      "accessToken",
+      mockUser.accessToken,
+      expect.objectContaining({ httpOnly: true }),
+    );
+  });
+
+  it("signIn: should throw UnauthorizedException for invalid credentials", async () => {
+    const input = { username: mockUser.userName, password: mockUser.password };
     service.signIn.mockRejectedValue(
       new UnauthorizedException("Invalid credentials"),
     );
 
-    try {
-      await resolver.signIn({ res }, input);
-    } catch (error) {
-      expect(error).toBeInstanceOf(UnauthorizedException);
-    }
+    await expect(resolver.signIn({ res }, input)).rejects.toBeInstanceOf(
+      UnauthorizedException,
+    );
   });
 
   it("signIn: should return bad request for empty password", async () => {
-    const input = { id: mockUser.id, password: "" };
+    const input = { username: mockUser.userName, password: "" };
     service.signIn.mockRejectedValue(new BadRequestException());
 
-    try {
-      await resolver.signIn({ res }, input);
-    } catch (error) {
-      expect(error).toBeInstanceOf(BadRequestException);
-    }
+    await expect(resolver.signIn({ res }, input)).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
   });
 });

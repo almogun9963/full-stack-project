@@ -7,8 +7,8 @@ import { User } from "./entities/user.entity";
 export class UserRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async findOne(id: string) {
-    const user = await this.userModel.findById(id).exec();
+  async findOne(userName: string) {
+    const user = await this.userModel.findOne({ userName: userName }).exec();
     return user ? (user.toObject() as User) : null;
   }
 }

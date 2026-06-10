@@ -6,8 +6,7 @@ import {
 } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
-import { User } from "src/user/entities/user.entity";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { secretRefreshToken } from "@repo/common-auth";
 import { SignUpInput } from "./dto/sign-up.input";
@@ -28,10 +27,10 @@ export class AuthService {
   async signUp(signUpInput: SignUpInput) {
     const hashedPassword = await bcrypt.hash(signUpInput?.password || "", 10);
 
-    const createdUser = (await this.authRepository.create({
+    const createdUser = await this.authRepository.create({
       ...signUpInput,
       password: hashedPassword,
-    })) as User;
+    });
 
     const userId = String(createdUser.id ?? "");
 
@@ -60,7 +59,7 @@ export class AuthService {
   }
 
   async signIn(signInInput: SignInInput): Promise<TokenResponse> {
-    const user = await this.userService.findOne(signInInput.id || "");
+    const user = await this.userService.findOne(signInInput.username || "");
 
     if (!user) {
       throw new NotFoundException("User not found");
@@ -93,7 +92,7 @@ export class AuthService {
 
   async refreshTokens(refreshInput: RefreshInput) {
     const userId = refreshInput.id || "";
-    const user = (await this.authRepository.findById(userId)) as User | null;
+    const user = await this.authRepository.findById(userId);
     if (!user?.refreshToken) {
       throw new UnauthorizedException("Invalid refresh token");
     }

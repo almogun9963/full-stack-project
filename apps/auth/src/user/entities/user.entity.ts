@@ -13,7 +13,7 @@ export class User implements UserType {
   @Prop({
     type: String,
     get: function (this: Document & { _id?: Types.ObjectId }) {
-      const id = this._id as Types.ObjectId | undefined;
+      const id = this._id as Types.ObjectId;
       return id?.toString();
     },
   })

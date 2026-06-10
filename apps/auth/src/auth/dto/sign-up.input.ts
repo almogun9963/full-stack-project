@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString, Matches } from "class-validator";
 export class SignUpInput {
   @Field()
   @IsString()
-  userName?: string;
+  userName!: string;
 
   @Field()
   @IsString()
@@ -16,5 +16,5 @@ export class SignUpInput {
         "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.",
     },
   )
-  password?: string;
+  password!: string;
 }

@@ -9,15 +9,18 @@ export class AuthRepository {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  async create(createUserData: Record<string, any>): Promise<any> {
+  async create(createUserData: User): Promise<User> {
     return this.userModel.create(createUserData);
   }
 
-  async findById(id: string): Promise<any> {
+  async findById(id: string): Promise<User | null> {
     return this.userModel.findById(id).exec();
   }
 
-  async updateRefreshToken(id: string, refreshToken: string): Promise<any> {
+  async updateRefreshToken(
+    id: string,
+    refreshToken: string,
+  ): Promise<User | null> {
     return this.userModel
       .findByIdAndUpdate(id, { refreshToken }, { new: true })
       .exec();

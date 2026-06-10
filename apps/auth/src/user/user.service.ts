@@ -5,7 +5,7 @@ import { UserRepository } from "./user.repository";
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async findOne(id: string) {
-    return this.userRepository.findOne(id);
+  async findOne(userName: string) {
+    return this.userRepository.findOne(userName);
   }
 }
