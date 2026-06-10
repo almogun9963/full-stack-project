@@ -1,4 +1,4 @@
-import { Field, InputType, Float } from '@nestjs/graphql';
+import { Field, InputType, Float } from "@nestjs/graphql";
 
 @InputType()
 export class RangeInput {

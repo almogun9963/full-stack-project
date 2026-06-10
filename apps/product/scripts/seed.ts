@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import * as mongoose from "mongoose";
 import * as dotenv from "dotenv";
 
@@ -84,7 +83,7 @@ const COMPANIES = [
 /**
  * Generate a single fake product
  */
-function generateProduct(): ProductDocument {
+function generateProduct(faker: any): ProductDocument {
   const numberOfRatings = faker.number.int({ min: 0, max: 500 });
   const ratings = Array.from({ length: numberOfRatings }, () =>
     faker.number.float({ min: 1, max: 5, fractionDigits: 1 }),
@@ -112,14 +111,15 @@ function generateProduct(): ProductDocument {
 /**
  * Generate multiple fake products
  */
-function generateProducts(count: number): ProductDocument[] {
-  return Array.from({ length: count }, () => generateProduct());
+function generateProducts(faker: any, count: number): ProductDocument[] {
+  return Array.from({ length: count }, () => generateProduct(faker));
 }
 
 /**
  * Seed MongoDB with generated products
  */
 async function seedDatabase() {
+  const { faker } = await import("@faker-js/faker");
   const count = parseInt(process.argv[2] || "50", 10);
   const mongoUri =
     process.env.MONGODB_URI || "mongodb://localhost:27017/products";
@@ -149,7 +149,7 @@ async function seedDatabase() {
 
     // Generate and insert products
     console.log(`Generating ${count} products...`);
-    const products = generateProducts(count);
+    const products = generateProducts(faker, count);
 
     console.log(`Inserting ${count} products into MongoDB...`);
     const result = await productsCollection.insertMany(products);
