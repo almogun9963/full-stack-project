@@ -3,7 +3,7 @@ import { AuthService } from "./auth.service";
 import { UserModule } from "../user/user.module";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthResolver } from "./auth.resolver";
-import { User, userSchema } from "src/user/entities/user.entity";
+import { User, userSchema } from "../user/entities/user.entity";
 import { MongooseModule } from "@nestjs/mongoose";
 import { secret } from "@repo/common-auth";
 import { AuthRepository } from "./auth.repository";
