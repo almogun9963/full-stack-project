@@ -7,6 +7,7 @@ import { UserResolver } from "./user.resolver";
 import { UserService } from "./user.service";
 import { UserRepository } from "./user.repository";
 import { Request, Response } from "express";
+import { IsUniqueConstraint } from "../utils/is-unique-constraint";
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { Request, Response } from "express";
       }),
     }),
   ],
-  providers: [UserResolver, UserService, UserRepository],
+  providers: [UserResolver, UserService, UserRepository, IsUniqueConstraint],
   exports: [UserService],
 })
 export class UserModule {}

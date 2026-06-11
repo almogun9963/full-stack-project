@@ -2,7 +2,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from "class-validator";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { User } from "../user/entities/user.entity";
 import { UserRepository } from "../user/user.repository";
 
@@ -11,13 +11,15 @@ import { UserRepository } from "../user/user.repository";
 export class IsUniqueConstraint implements ValidatorConstraintInterface {
   constructor(private userRepository: UserRepository) {}
 
-  async validate(value: any): Promise<boolean> {
-    const userName: string | undefined =
-      typeof value === "string" ? value : value?.userName;
-
+  async validate(userName: string): Promise<boolean> {
     if (!userName) return true;
 
     const exists = await this.userRepository.findOne(userName);
-    return exists ? false : true;
+
+    if (exists) {
+      throw new BadRequestException("this user name is already taken");
+    }
+
+    return true;
   }
 }
