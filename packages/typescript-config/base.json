@@ -23,8 +23,7 @@
     "noFallthroughCasesInSwitch": false,
     "strictPropertyInitialization": false,
     "paths": {
-      "@repo/*": ["../../packages/*/dist"],
-      "@utils/*": ["../../utils/*"]
+      "@repo/*": ["../../packages/*/dist"]
     },
     "types": ["node"]
   }

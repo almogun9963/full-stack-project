@@ -6,10 +6,10 @@ export class SignInInput {
   @Field()
   @IsString()
   @IsNotEmpty()
-  username!: string;
+  username: string;
 
   @Field()
   @IsString()
   @IsNotEmpty()
-  password!: string;
+  password: string;
 }

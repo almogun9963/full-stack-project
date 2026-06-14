@@ -3,7 +3,10 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { UserType } from "@repo/common-types";
 
 @ObjectType()
-@Schema()
+@Schema({
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
 export class User implements UserType {
   @Field(() => ID)
   id?: string;
@@ -20,3 +23,8 @@ export class User implements UserType {
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
+userSchema.set("toObject", { virtuals: true });
+userSchema.set("toJSON", { virtuals: true });
+userSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});

@@ -19,7 +19,6 @@ export class AuthResolver {
     const user = await this.authService.signUp(signUpInput);
     context.res.cookie("accessToken", user.accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
     });
     return user;

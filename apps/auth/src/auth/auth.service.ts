@@ -11,25 +11,27 @@ import { secretRefreshToken } from "@repo/common-auth";
 import { SignUpInput } from "./dto/sign-up.input";
 import { SignInInput } from "./dto/sign-in.input";
 import { RefreshInput } from "./dto/refresh.input";
-import { AuthRepository } from "./auth.repository";
 import { TokenResponse } from "./entities/token.response";
+import { UserRepository } from "../user/user.repository";
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   constructor(
-    private readonly authRepository: AuthRepository,
+    private readonly userRepository: UserRepository,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
   async signUp(signUpInput: SignUpInput) {
-    const hashedPassword = await bcrypt.hash(signUpInput?.password || "", 10);
+    const hashedPassword = await bcrypt.hash(signUpInput?.password, 10);
 
-    const createdUser = await this.authRepository.create({
+    const createdUser = await this.userRepository.create({
       ...signUpInput,
       password: hashedPassword,
     });
+
+    console.log(createdUser);
 
     const userId = createdUser.id || "";
 
@@ -42,7 +44,7 @@ export class AuthService {
       expiresIn: "7d",
     });
 
-    await this.authRepository.updateRefreshToken(
+    await this.userRepository.updateRefreshToken(
       userId,
       await bcrypt.hash(refreshToken, 10),
     );
@@ -73,6 +75,7 @@ export class AuthService {
     }
 
     const userId = user.id;
+
     if (!userId) {
       throw new UnauthorizedException("Invalid user id");
     }
@@ -98,25 +101,26 @@ export class AuthService {
   }
 
   async refreshTokens(refreshInput: RefreshInput) {
-    const userId = refreshInput.id || "";
-    const user = await this.authRepository.findById(userId);
+    const userId = refreshInput.id;
+    const user = await this.userRepository.findById(userId);
     if (!user?.refreshToken) {
       throw new UnauthorizedException("Invalid refresh token");
     }
-    const presentedToken = refreshInput.refreshToken ?? "";
-    try {
-      await this.jwtService.verifyAsync(presentedToken, {
-        secret: secretRefreshToken,
-      });
-    } catch {
-      throw new UnauthorizedException("Invalid refresh token");
+
+    const encryptedRefreshToken = await bcrypt.hash(
+      refreshInput.refreshToken,
+      10,
+    );
+    if (await bcrypt.compare(user.refreshToken, encryptedRefreshToken)) {
+      return {
+        accessToken: await this.jwtService.signAsync({
+          id: userId,
+          userName: user.userName,
+        }),
+      };
     }
-    return {
-      accessToken: await this.jwtService.signAsync({
-        id: userId,
-        userName: user.userName,
-      }),
-    };
+
+    throw new UnauthorizedException("Invalid refresh token");
   }
 
   async generateRefreshToken(
@@ -128,7 +132,7 @@ export class AuthService {
       expiresIn: "7d",
     });
 
-    await this.authRepository.updateRefreshToken(userId, newRefreshToken);
+    await this.userRepository.updateRefreshToken(userId, newRefreshToken);
 
     return newRefreshToken;
   }

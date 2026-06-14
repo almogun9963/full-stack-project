@@ -5,7 +5,8 @@ import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule } from "@nestjs/config";
-
+import { JwtModule } from "@nestjs/jwt";
+import { secret } from "@repo/common-auth";
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -14,7 +15,13 @@ import { ConfigModule } from "@nestjs/config";
     UserModule,
     AuthModule,
     MongooseModule.forRoot("mongodb://localhost:27017/auth"),
+    JwtModule.register({
+      global: true,
+      secret: secret,
+      signOptions: { expiresIn: "600s" },
+    }),
   ],
+
   controllers: [AppController],
   providers: [AppService],
 })

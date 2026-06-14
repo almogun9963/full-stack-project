@@ -4,10 +4,10 @@ import { IsNotEmpty, IsString } from "class-validator";
 @InputType()
 export class RefreshInput {
   @Field(() => ID)
-  id!: string;
+  id: string;
 
   @Field()
   @IsString()
   @IsNotEmpty()
-  refreshToken!: string;
+  refreshToken: string;
 }

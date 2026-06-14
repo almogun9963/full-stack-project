@@ -19,7 +19,6 @@ describe("AuthResolver", () => {
     cookie: jest.fn(),
   } as unknown as Response;
   beforeEach(async () => {
-    (res.cookie as jest.Mock).mockClear();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthResolver,
@@ -36,6 +35,7 @@ describe("AuthResolver", () => {
 
     resolver = module.get<AuthResolver>(AuthResolver);
     service = module.get(AuthService);
+    (res.cookie as jest.Mock).mockClear();
   });
 
   it("signUp: should return the created user", async () => {
