@@ -1,14 +1,14 @@
 import { InputType, Field } from "@nestjs/graphql";
 import { IsNotEmpty, IsString, Matches } from "class-validator";
 import { IsUnique } from "../../utils/is.unique.decorator";
-
+// import { IsUnique } from "@utils/is.unique.decorator"; // not working
 @InputType()
 export class SignUpInput {
   @Field()
   @IsString()
   @IsUnique()
   @IsNotEmpty()
-  userName!: string;
+  userName: string;
 
   @Field()
   @IsString()
@@ -20,5 +20,5 @@ export class SignUpInput {
         "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.",
     },
   )
-  password!: string;
+  password: string;
 }

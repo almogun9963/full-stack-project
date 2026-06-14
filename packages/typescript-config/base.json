@@ -24,7 +24,7 @@
     "strictPropertyInitialization": false,
     "paths": {
       "@repo/*": ["../../packages/*/dist"],
-      "@utils/*": ["../../utils"]
+      "@utils/*": ["../../utils/*"]
     },
     "types": ["node"]
   }

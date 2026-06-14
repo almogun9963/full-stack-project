@@ -76,7 +76,7 @@ export class AuthService {
     if (!userId) {
       throw new UnauthorizedException("Invalid user id");
     }
-    const payload = { id: userId, username: user.userName ?? "" };
+    const payload = { id: userId, username: user.userName };
 
     const refreshToken = await this.generateRefreshToken(userId, payload);
     this.logger.log(
