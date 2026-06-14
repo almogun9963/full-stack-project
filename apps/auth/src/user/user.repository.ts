@@ -27,7 +27,7 @@ export class UserRepository {
   ): Promise<User | null> {
     const refreshTokenEntity = {
       refreshToken: refreshToken,
-      expireAt: new Date(),
+      expireAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     } as RefreshTokenEntity;
 
     return this.userModel
