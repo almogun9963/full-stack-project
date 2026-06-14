@@ -3,6 +3,7 @@ import { AuthResolver } from "./auth.resolver";
 import { AuthService } from "./auth.service";
 import { BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { Request, Response } from "express";
+import { RefreshTokenEntity } from "../user/entities/refresh.token.entity";
 
 describe("AuthResolver", () => {
   let resolver: AuthResolver;
@@ -12,7 +13,9 @@ describe("AuthResolver", () => {
     userName: "almog",
     password: "!Aa123456789",
     accessToken: "access-token",
-    refreshToken: "refresh-token",
+    refreshTokens: [
+      { refreshToken: "refresh-token", expireAt: new Date() },
+    ] as RefreshTokenEntity[],
   };
   const req = {} as Request;
   const res = {

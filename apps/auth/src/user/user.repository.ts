@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { User } from "./entities/user.entity";
+import { RefreshTokenEntity } from "./entities/refresh.token.entity";
 
 @Injectable()
 export class UserRepository {
@@ -24,8 +25,17 @@ export class UserRepository {
     id: string,
     refreshToken: string,
   ): Promise<User | null> {
+    const refreshTokenEntity = {
+      refreshToken: refreshToken,
+      expireAt: new Date(),
+    } as RefreshTokenEntity;
+
     return this.userModel
-      .findByIdAndUpdate(id, { refreshToken }, { new: true })
+      .findByIdAndUpdate(
+        id,
+        { $push: { refreshTokens: refreshTokenEntity } },
+        { new: true },
+      )
       .exec();
   }
 }

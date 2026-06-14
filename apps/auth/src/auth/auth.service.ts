@@ -87,6 +87,7 @@ export class AuthService {
       user.userName,
     );
     console.log(
+      //need to delete
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
         process.env.REFRESH_TOKEN_SECRET +
         "bbbbbbbbbbb" +
@@ -103,7 +104,7 @@ export class AuthService {
   async refreshTokens(refreshInput: RefreshInput) {
     const userId = refreshInput.id;
     const user = await this.userRepository.findById(userId);
-    if (!user?.refreshToken) {
+    if (!user?.refreshTokens) {
       throw new UnauthorizedException("Invalid refresh token");
     }
 
@@ -111,7 +112,13 @@ export class AuthService {
       refreshInput.refreshToken,
       10,
     );
-    if (await bcrypt.compare(user.refreshToken, encryptedRefreshToken)) {
+    if (
+      await bcrypt.compare(
+        user.refreshTokens.at(user.refreshTokens.length - 1)?.refreshToken ||
+          "",
+        encryptedRefreshToken,
+      )
+    ) {
       return {
         accessToken: await this.jwtService.signAsync({
           id: userId,
