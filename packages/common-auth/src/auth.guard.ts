@@ -11,15 +11,15 @@ import { GqlExecutionContext } from "@nestjs/graphql";
 
 type JwtPayload = {
   sub: string;
-  email?: string;
-  iat?: number;
-  exp?: number;
+  email: string;
+  iat: number;
+  exp: number;
   [key: string]: unknown;
 };
 
 type GqlContext = {
   req: Request;
-  user?: JwtPayload;
+  user: JwtPayload;
 };
 
 @Injectable()

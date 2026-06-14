@@ -1,4 +1,4 @@
-import { ValidationOptions, registerDecorator } from "class-validator";
+import { registerDecorator } from "class-validator";
 import { IsUniqueConstraint } from "./is-unique-constraint";
 import { UserType } from "@repo/common-types";
 

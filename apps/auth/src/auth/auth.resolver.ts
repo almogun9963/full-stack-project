@@ -33,7 +33,6 @@ export class AuthResolver {
     const tokens = await this.authService.signIn(signInInput);
     context.res.cookie("accessToken", tokens.accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
     });
     return tokens;

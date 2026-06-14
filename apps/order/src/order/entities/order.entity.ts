@@ -6,15 +6,15 @@ import { OrderType } from "@repo/common-types";
 @Schema()
 export class Order implements OrderType {
   @Field(() => ID)
-  id?: string;
+  id: string;
 
   @Field()
   @Prop()
-  cartId?: string;
+  cartId: string;
 
   @Field()
   @Prop()
-  userId?: string;
+  userId: string;
 }
 
 export const orderSchema = SchemaFactory.createForClass(Order);

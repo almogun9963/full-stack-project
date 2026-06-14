@@ -5,11 +5,11 @@ import { Tag } from "@repo/common-types";
 @InputType()
 export class FiltersProductInput {
   @Field({ nullable: true })
-  price?: RangeInput;
+  price: RangeInput;
 
   @Field({ nullable: true })
-  company?: string;
+  company: string;
 
   @Field(() => [Tag], { nullable: true })
-  tags?: Tag[];
+  tags: Tag[];
 }

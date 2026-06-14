@@ -5,51 +5,51 @@ import { ProductType, Tag } from "@repo/common-types";
 @Schema()
 export class Product implements ProductType {
   @Field(() => ID)
-  id?: string;
+  id: string;
 
   @Prop()
   @Field()
-  name?: string;
+  name: string;
 
   @Field()
   @Prop()
-  price?: number;
+  price: number;
 
   @Field()
   @Prop()
-  company?: string;
+  company: string;
 
   @Field()
   @Prop()
-  productType?: string;
+  productType: string;
 
   @Field(() => [Number])
   @Prop({ type: [Number], default: [] })
-  ratings?: number[];
+  ratings: number[];
 
   @Field()
   @Prop()
-  description?: string;
+  description: string;
 
   @Field()
   @Prop()
-  size?: string;
+  size: string;
 
   @Field(() => [Tag])
   @Prop({ type: [String], enum: Tag, default: [Tag.Budget] })
-  tags?: Tag[];
+  tags: Tag[];
 
   @Field()
   @Prop()
-  imageUrl?: string;
+  imageUrl: string;
 
   @Field()
   @Prop()
-  isAvailable?: boolean;
+  isAvailable: boolean;
 
   @Field()
   @Prop()
-  category?: string;
+  category: string;
 }
 
 export const productSchema = SchemaFactory.createForClass(Product);

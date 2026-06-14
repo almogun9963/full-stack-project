@@ -7,7 +7,6 @@ import {
 import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
 import { secretRefreshToken } from "@repo/common-auth";
 import { SignUpInput } from "./dto/sign-up.input";
 import { SignInInput } from "./dto/sign-in.input";
@@ -32,15 +31,14 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    const userId = String(createdUser.id ?? "");
+    const userId = createdUser.id || "";
 
     const payload = {
       id: userId,
       username: createdUser.userName,
     };
-
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: secretRefreshToken,
+      secret: process.env.REFRESH_TOKEN_SECRET,
       expiresIn: "7d",
     });
 
@@ -65,8 +63,8 @@ export class AuthService {
       throw new NotFoundException("User not found");
     }
 
-    const isPasswordValid: boolean = await bcrypt.compare(
-      signInInput.password ?? "",
+    const isPasswordValid = await bcrypt.compare(
+      signInInput.password,
       user.password ?? "",
     );
 
@@ -74,15 +72,24 @@ export class AuthService {
       throw new UnauthorizedException("Invalid credentials");
     }
 
-    const userId = user.id ?? "";
+    const userId = user.id;
     if (!userId) {
       throw new UnauthorizedException("Invalid user id");
     }
     const payload = { id: userId, username: user.userName ?? "" };
 
     const refreshToken = await this.generateRefreshToken(userId, payload);
-    this.logger.log("Issued new refresh token");
-    this.logger.log("User found for sign-in:", user.userName);
+    this.logger.log(
+      "Issued new refresh token. User found for sign-in:",
+      user.userName,
+    );
+    console.log(
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+        process.env.REFRESH_TOKEN_SECRET +
+        "bbbbbbbbbbb" +
+        process.env.JWT_SECRET,
+      +"ccccccccccccccccc" + secretRefreshToken,
+    );
 
     return {
       accessToken: await this.jwtService.signAsync(payload),
@@ -98,12 +105,17 @@ export class AuthService {
     }
     const presentedToken = refreshInput.refreshToken ?? "";
     try {
-      jwt.verify(presentedToken, secretRefreshToken);
+      await this.jwtService.verifyAsync(presentedToken, {
+        secret: secretRefreshToken,
+      });
     } catch {
       throw new UnauthorizedException("Invalid refresh token");
     }
     return {
-      accessToken: await this.jwtService.signAsync({ id: userId }),
+      accessToken: await this.jwtService.signAsync({
+        id: userId,
+        userName: user.userName,
+      }),
     };
   }
 

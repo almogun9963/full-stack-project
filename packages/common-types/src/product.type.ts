@@ -1,27 +1,27 @@
 import { Tag } from "./tag.type.js";
 
 export interface ProductType {
-  id?: string;
+  id: string;
 
-  name?: string;
+  name: string;
 
-  price?: number;
+  price: number;
 
-  company?: string;
+  company: string;
 
-  productType?: string;
+  productType: string;
 
-  ratings?: number[];
+  ratings: number[];
 
-  description?: string;
+  description: string;
 
-  size?: string;
+  size: string;
 
-  tags?: Tag[];
+  tags: Tag[];
 
-  imageUrl?: string;
+  imageUrl: string;
 
-  isAvailable?: boolean;
+  isAvailable: boolean;
 
-  category?: string;
+  category: string;
 }

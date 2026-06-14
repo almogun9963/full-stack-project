@@ -6,19 +6,19 @@ import { CartType } from "@repo/common-types";
 @Schema()
 export class Cart implements CartType {
   @Field(() => ID)
-  id?: string;
+  id: string;
 
   @Field()
   @Prop()
-  userId?: string;
+  userId: string;
 
   @Field(() => [String], { defaultValue: [] })
   @Prop()
-  productsIds?: string[];
+  productsIds: string[];
 
   @Field(() => Date, { nullable: true })
   @Prop()
-  deletedAt?: Date;
+  deletedAt: Date;
 }
 
 export const cartSchema = SchemaFactory.createForClass(Cart);

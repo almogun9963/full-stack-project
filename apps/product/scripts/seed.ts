@@ -121,8 +121,7 @@ function generateProducts(faker: any, count: number): ProductDocument[] {
 async function seedDatabase() {
   const { faker } = await import("@faker-js/faker");
   const count = parseInt(process.argv[2] || "50", 10);
-  const mongoUri =
-    process.env.MONGODB_URI || "mongodb://localhost:27017/products";
+  const mongoUri = "mongodb://localhost:27017/products";
 
   if (isNaN(count) || count <= 0) {
     console.error("Please provide a valid number of products to generate");

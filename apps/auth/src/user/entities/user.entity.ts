@@ -1,36 +1,22 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types } from "mongoose";
 import { UserType } from "@repo/common-types";
 
 @ObjectType()
-@Schema({
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true },
-})
+@Schema()
 export class User implements UserType {
   @Field(() => ID)
-  @Prop({
-    type: String,
-    get: function (this: Document & { _id?: Types.ObjectId }) {
-      const id = this._id as Types.ObjectId;
-      return id?.toString();
-    },
-  })
   id?: string;
 
   @Field()
   @Prop()
-  userName?: string;
+  userName: string;
 
   @Prop()
-  password?: string;
+  password: string;
 
   @Prop({ nullable: true })
   refreshToken?: string;
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
-
-userSchema.set("toObject", { getters: true, virtuals: true });
-userSchema.set("toJSON", { getters: true, virtuals: true });

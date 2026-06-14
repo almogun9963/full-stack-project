@@ -5,9 +5,14 @@ import { AppService } from "./app.service";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from "@nestjs/apollo";
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from "@apollo/gateway";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ".env",
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
       server: {

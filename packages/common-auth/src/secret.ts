@@ -1,4 +1,4 @@
-export const secret: string =
-  "DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.";
+export const secret: string = process.env.JWT_SECRET || "not from envFile";
 
-export const secretRefreshToken: string = "REFRESH_TOKEN_SECRET";
+export const secretRefreshToken: string =
+  process.env.REFRESH_TOKEN_SECRET || "not from envFile - refresh";

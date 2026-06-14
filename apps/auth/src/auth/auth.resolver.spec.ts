@@ -28,7 +28,7 @@ describe("AuthResolver", () => {
           useValue: {
             signUp: jest.fn(),
             signIn: jest.fn(),
-            refreshTokens: jest.fn(),
+            refreshTokenS: jest.fn(),
           },
         },
       ],

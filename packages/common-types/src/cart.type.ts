@@ -1,9 +1,9 @@
 export interface CartType {
-  id?: string;
+  id: string;
 
-  userId?: string;
+  userId: string;
 
-  productsIds?: string[];
+  productsIds: string[];
 
-  deletedAt?: Date;
+  deletedAt: Date;
 }

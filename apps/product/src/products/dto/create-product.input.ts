@@ -12,46 +12,46 @@ import { Tag } from "@repo/common-types";
 export class CreateProductDto {
   @Field()
   @IsString()
-  name?: string;
+  name: string;
 
   @Field()
   @IsNumber()
-  price?: number;
+  price: number;
 
   @Field()
   @IsString()
-  company?: string;
+  company: string;
 
   @Field()
   @IsString()
-  productType?: string;
+  productType: string;
 
   @Field(() => [Number])
   @IsArray()
-  ratings?: number[];
+  ratings: number[];
 
   @Field()
   @IsString()
-  description?: string;
+  description: string;
 
   @Field()
   @IsString()
-  size?: string;
+  size: string;
 
   @Field(() => [Tag])
   @IsArray()
   @IsEnum(Tag, { each: true })
-  tags?: Tag[];
+  tags: Tag[];
 
   @Field()
   @IsString()
-  imageUrl?: string;
+  imageUrl: string;
 
   @Field()
   @IsBoolean()
-  isAvailable?: boolean;
+  isAvailable: boolean;
 
   @Field()
   @IsString()
-  category?: string;
+  category: string;
 }

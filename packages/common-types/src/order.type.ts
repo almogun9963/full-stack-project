@@ -1,7 +1,7 @@
 export interface OrderType {
-  id?: string;
+  id: string;
 
-  cartId?: string;
+  cartId: string;
 
-  userId?: string;
+  userId: string;
 }
