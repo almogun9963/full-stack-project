@@ -30,6 +30,8 @@ export class AuthService {
     const createdUser = await this.userRepository.create({
       ...signUpInput,
       password: hashedPassword,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     const userId = createdUser.id || "";

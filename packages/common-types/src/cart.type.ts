@@ -6,4 +6,8 @@ export interface CartType {
   productsIds: string[];
 
   deletedAt: Date;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }

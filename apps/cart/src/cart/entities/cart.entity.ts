@@ -3,7 +3,11 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { CartType } from "@repo/common-types";
 
 @ObjectType()
-@Schema()
+@Schema({
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
 export class Cart implements CartType {
   @Field(() => ID)
   id: string;
@@ -19,6 +23,19 @@ export class Cart implements CartType {
   @Field(() => Date, { nullable: true })
   @Prop()
   deletedAt: Date;
+
+  @Field(() => Date)
+  @Prop()
+  createdAt: Date;
+
+  @Field(() => Date)
+  @Prop()
+  updatedAt: Date;
 }
 
 export const cartSchema = SchemaFactory.createForClass(Cart);
+cartSchema.set("toObject", { virtuals: true });
+cartSchema.set("toJSON", { virtuals: true });
+cartSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});

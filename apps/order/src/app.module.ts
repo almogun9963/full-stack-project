@@ -18,8 +18,6 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const uri = configService.get<string>("MONGO_URI");
-        console.log("uriiiii" + uri);
-
         return {
           uri: uri + "/products",
         };

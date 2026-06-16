@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 @ObjectType()
 @Schema({
+  timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
 })

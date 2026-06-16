@@ -5,6 +5,7 @@ import { RefreshTokenEntity } from "./refresh.token.entity";
 
 @ObjectType()
 @Schema({
+  timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
 })
@@ -21,6 +22,14 @@ export class User implements UserType {
 
   @Prop({ nullable: true })
   refreshTokens?: RefreshTokenEntity[];
+
+  @Field(() => Date)
+  @Prop()
+  createdAt: Date;
+
+  @Field(() => Date)
+  @Prop()
+  updatedAt: Date;
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
