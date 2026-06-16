@@ -12,7 +12,7 @@ export class ProductsService {
     return this.productsRepository.create(createProductInput);
   }
 
-  async findAllProducts(filters: FiltersProductInput): Promise<Product[]> {
+  async findAllProducts(filters?: FiltersProductInput): Promise<Product[]> {
     return this.productsRepository.findWithFilters(filters);
   }
 

@@ -8,7 +8,7 @@ import { RefreshTokenEntity } from "./entities/refresh.token.entity";
 export class UserRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async findOne(userName: string) {
+  async findOne(userName: string): Promise<User | null> {
     const user = await this.userModel.findOne({ userName: userName }).exec();
     return user ? (user.toObject() as User) : null;
   }

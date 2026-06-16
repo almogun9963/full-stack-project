@@ -24,7 +24,12 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async signUp(signUpInput: SignUpInput) {
+  async signUp(signUpInput: SignUpInput): Promise<{
+    id: string;
+    userName: string;
+    accessToken: string;
+    refreshToken: string;
+  }> {
     const hashedPassword = await bcrypt.hash(signUpInput?.password, 10);
 
     const createdUser = await this.userRepository.create({
@@ -40,8 +45,11 @@ export class AuthService {
       id: userId,
       username: createdUser.userName,
     };
+    const secretRefreshToken = this.configService.get<string>(
+      "REFRESH_TOKEN_SECRET",
+    );
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: process.env.REFRESH_TOKEN_SECRET,
+      secret: secretRefreshToken,
       expiresIn: "7d",
     });
 
@@ -94,7 +102,9 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(refreshInput: RefreshInput) {
+  async refreshTokens(refreshInput: RefreshInput): Promise<{
+    accessToken: string;
+  }> {
     const userId = refreshInput.id;
     const user = await this.userRepository.findById(userId);
     if (!user?.refreshTokens) {
@@ -126,7 +136,7 @@ export class AuthService {
   async generateRefreshToken(
     userId: string,
     payload: { id: string; username: string },
-  ) {
+  ): Promise<string> {
     const secretRefreshToken = this.configService.get<string>(
       "REFRESH_TOKEN_SECRET",
     );

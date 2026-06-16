@@ -16,7 +16,7 @@ export class ProductsRepository {
     return await createdProduct.save();
   }
 
-  async findWithFilters(filters: FiltersProductInput): Promise<Product[]> {
+  async findWithFilters(filters?: FiltersProductInput): Promise<Product[]> {
     if (filters != null) {
       const filtersToMongo: FilterQuery<Product> = {};
       if (filters.price != null) {

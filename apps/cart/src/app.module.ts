@@ -1,7 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
 import { MongooseModule } from "@nestjs/mongoose";
-import { AppService } from "./app.service";
 import { CartModule } from "./cart/cart.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 
@@ -23,7 +21,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

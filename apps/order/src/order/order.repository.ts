@@ -8,12 +8,15 @@ import { CreateOrderInput } from "./dto/create-order.input";
 export class OrderRepository {
   constructor(@InjectModel(Order.name) private orderModel: Model<Order>) {}
 
-  async create(userId: string, createOrderInput: CreateOrderInput) {
+  async create(
+    userId: string,
+    createOrderInput: CreateOrderInput,
+  ): Promise<Order> {
     const createdOrder = new this.orderModel({ ...createOrderInput, userId });
     return await createdOrder.save();
   }
 
-  async findByUserId(userId: string) {
+  async findByUserId(userId: string): Promise<Order[]> {
     return await this.orderModel.find({ userId }).exec();
   }
 }

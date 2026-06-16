@@ -7,16 +7,16 @@ import { Cart } from "./entities/cart.entity";
 export class CartRepository {
   constructor(@InjectModel(Cart.name) private cartModel: Model<Cart>) {}
 
-  async create(userId: string) {
+  async create(userId: string): Promise<Cart> {
     const createdCart = new this.cartModel({ userId });
     return await createdCart.save();
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<Cart | null> {
     return await this.cartModel.findOne({ _id: id }).exec();
   }
 
-  async addProduct(id: string, productIdToAdd: string) {
+  async addProduct(id: string, productIdToAdd: string): Promise<Cart | null> {
     return await this.cartModel
       .findOneAndUpdate(
         { _id: id },
@@ -26,7 +26,10 @@ export class CartRepository {
       .exec();
   }
 
-  async removeProduct(id: string, productIdToRemove: string) {
+  async removeProduct(
+    id: string,
+    productIdToRemove: string,
+  ): Promise<Cart | null> {
     return await this.cartModel
       .findOneAndUpdate(
         { _id: id },
@@ -36,7 +39,7 @@ export class CartRepository {
       .exec();
   }
 
-  async softDelete(id: string) {
+  async delete(id: string): Promise<Cart | null> {
     return await this.cartModel
       .findOneAndUpdate({ _id: id }, { deletedAt: new Date() }, { new: true })
       .exec();
