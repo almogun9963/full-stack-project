@@ -3,12 +3,28 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { OrderModule } from "./order/order.module";
 import { MongooseModule } from "@nestjs/mongoose";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 @Module({
   imports: [
     OrderModule,
     ConfigModule,
-    MongooseModule.forRoot("mongodb://localhost:27017/products"),
+    MongooseModule.forRootAsync({
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: [".env"],
+          isGlobal: true,
+        }),
+      ],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const uri = configService.get<string>("MONGO_URI");
+        console.log("uriiiii" + uri);
+
+        return {
+          uri: uri + "/products",
+        };
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

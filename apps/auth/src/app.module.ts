@@ -10,12 +10,22 @@ import { join } from "path";
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [join(__dirname, "..", "..", "..", ".env")],
+      envFilePath: [".env"],
       isGlobal: true,
     }),
     UserModule,
     AuthModule,
-    MongooseModule.forRoot("mongodb://localhost:27017/auth"),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const uri = configService.get<string>("MONGO_URI");
+        console.log("uriiiii" + uri);
+        return {
+          uri: uri + "/auth",
+        };
+      },
+    }),
 
     JwtModule.registerAsync({
       global: true,
