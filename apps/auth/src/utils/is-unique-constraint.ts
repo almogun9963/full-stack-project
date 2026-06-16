@@ -3,7 +3,6 @@ import {
   ValidatorConstraintInterface,
 } from "class-validator";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { User } from "../user/entities/user.entity";
 import { UserRepository } from "../user/user.repository";
 
 @ValidatorConstraint({ name: "IsUniqueConstraint", async: true })
