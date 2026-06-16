@@ -10,7 +10,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     MongooseModule.forRootAsync({
       imports: [
         ConfigModule.forRoot({
-          envFilePath: [".env"],
+          envFilePath: ["../../.env"],
           isGlobal: true,
         }),
       ],

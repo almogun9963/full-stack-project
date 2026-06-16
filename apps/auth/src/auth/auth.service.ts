@@ -32,8 +32,6 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    console.log(createdUser);
-
     const userId = createdUser.id || "";
 
     const payload = {

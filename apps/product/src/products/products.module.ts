@@ -10,7 +10,6 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { ProductsRepository } from "./products.repository";
-import { join } from "path";
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Product.name, schema: productSchema }]),
@@ -21,7 +20,7 @@ import { join } from "path";
       },
     }),
     ConfigModule.forRoot({
-      envFilePath: [join(__dirname, "..", "..", "..", ".env")],
+      envFilePath: ["../../.env"],
       isGlobal: true,
     }),
     JwtModule.registerAsync({

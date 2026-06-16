@@ -17,7 +17,7 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
     const exists = await this.userRepository.findOne(userName);
 
     if (exists) {
-      throw new BadRequestException("this user name is already taken");
+      throw new BadRequestException("this user name is already exists");
     }
 
     return true;

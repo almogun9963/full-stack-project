@@ -4,12 +4,11 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { AppService } from "./app.service";
 import { CartModule } from "./cart/cart.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { join } from "path";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [".env"],
+      envFilePath: ["../../.env"],
       isGlobal: true,
     }),
     CartModule,

@@ -26,7 +26,6 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const secret = configService.get<string>("JWT_SECRET");
-        console.error("no secret");
         return {
           secret: secret,
           signOptions: { expiresIn: "600s" },

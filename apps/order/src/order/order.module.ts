@@ -10,7 +10,6 @@ import { AuthGuard } from "@repo/common-auth";
 import { JwtModule } from "@nestjs/jwt";
 import { OrderRepository } from "./order.repository";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { join } from "path";
 
 @Module({
   imports: [
@@ -22,7 +21,7 @@ import { join } from "path";
       },
     }),
     ConfigModule.forRoot({
-      envFilePath: [join(__dirname, "..", "..", "..", ".env")],
+      envFilePath: ["../../.env"],
       isGlobal: true,
     }),
     JwtModule.registerAsync({
