@@ -9,10 +9,7 @@ import { AuthGuard } from "./auth.guard.js";
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [
-        join(process.cwd(), ".env"),
-        join(__dirname, "..", "..", "..", ".env"),
-      ],
+      envFilePath: [join(__dirname, "..", "..", "..", ".env")],
       isGlobal: true,
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({

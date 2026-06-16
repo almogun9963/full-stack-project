@@ -7,12 +7,12 @@ import {
 import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcrypt";
-import { secretRefreshToken } from "@repo/common-auth";
 import { SignUpInput } from "./dto/sign-up.input";
 import { SignInInput } from "./dto/sign-in.input";
 import { RefreshInput } from "./dto/refresh.input";
 import { TokenResponse } from "./entities/token.response";
 import { UserRepository } from "../user/user.repository";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
@@ -21,6 +21,7 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async signUp(signUpInput: SignUpInput) {
@@ -126,6 +127,10 @@ export class AuthService {
     userId: string,
     payload: { id: string; username: string },
   ) {
+    const secretRefreshToken = this.configService.get<string>(
+      "REFRESH_TOKEN_SECRET",
+    );
+
     const newRefreshToken = await this.jwtService.signAsync(payload, {
       secret: secretRefreshToken,
       expiresIn: "7d",

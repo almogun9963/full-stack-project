@@ -22,10 +22,7 @@ import { join } from "path";
       },
     }),
     ConfigModule.forRoot({
-      envFilePath: [
-        join(process.cwd(), ".env"),
-        join(__dirname, "..", "..", "..", ".env"),
-      ],
+      envFilePath: [join(__dirname, "..", "..", "..", ".env")],
       isGlobal: true,
     }),
     JwtModule.registerAsync({

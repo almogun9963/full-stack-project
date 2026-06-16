@@ -8,10 +8,7 @@ import { join } from "path";
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [
-        join(process.cwd(), ".env"),
-        join(__dirname, "..", "..", "..", ".env"),
-      ],
+      envFilePath: [join(__dirname, "..", "..", "..", ".env")],
       isGlobal: true,
     }),
     CartModule,
