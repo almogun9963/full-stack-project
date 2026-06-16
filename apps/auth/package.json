@@ -36,10 +36,10 @@
     "typescript": "latest"
   },
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/cookie-parser": "^1.4.10",
-    "@types/jest": "^29.5.14",
-    "@types/mocha": "^10.0.10"
+    "@types/bcrypt": "6.0.0",
+    "@types/cookie-parser": "1.4.10",
+    "@types/jest": "29.5.14",
+    "@types/mocha": "10.0.10"
   },
   "jest": {
     "moduleFileExtensions": [

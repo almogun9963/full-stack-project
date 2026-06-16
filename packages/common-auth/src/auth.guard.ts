@@ -5,48 +5,37 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { JwtService } from "@nestjs/jwt";
-import { Request } from "express";
+import { ConfigService } from "@nestjs/config";
 import { GqlExecutionContext } from "@nestjs/graphql";
-
-type JwtPayload = {
-  sub: string;
-  email: string;
-  iat: number;
-  exp: number;
-  [key: string]: unknown;
-};
-
-type GqlContext = {
-  req: Request;
-  user: JwtPayload;
-};
+import { Request } from "express";
+import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
+    private configService: ConfigService,
     private reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(
-      "IS_PUBLIC_KEY",
-      [context.getHandler(), context.getClass()],
-    );
-    if (isPublic) {
-      return true;
-    }
-
     const ctx = GqlExecutionContext.create(context);
-    const token = this.extractTokenFromHeader(ctx.getContext().req);
+    const gqlContext = ctx.getContext();
+    const token = this.extractTokenFromHeader(gqlContext.req);
 
     if (!token) {
       throw new UnauthorizedException();
     }
+
+    const secret = this.configService.get<string>("JWT_SECRET");
+
+    if (!secret) {
+      throw new Error(
+        "JWT_SECRET is missing from the environment configuration",
+      );
+    }
+
     try {
-      const payload = await this.jwtService.verify<JwtPayload>(token);
-      const gqlContext = ctx.getContext() as GqlContext;
+      const payload = jwt.verify(token, secret);
       gqlContext.user = payload;
     } catch {
       throw new UnauthorizedException();
@@ -55,7 +44,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    const [type, token] = request.headers?.authorization?.split(" ") ?? [];
     return type === "Bearer" ? token : undefined;
   }
 }

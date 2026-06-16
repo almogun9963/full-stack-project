@@ -8,8 +8,8 @@ import { Cart, cartSchema } from "./entities/cart.entity";
 import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "@repo/common-auth";
 import { JwtModule } from "@nestjs/jwt";
-import { secret } from "@repo/common-auth";
 import { CartRepository } from "./cart.repository";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
@@ -20,10 +20,18 @@ import { CartRepository } from "./cart.repository";
         federation: 2,
       },
     }),
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: secret,
-      signOptions: { expiresIn: "600s" },
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const secret = configService.get<string>("JWT_SECRET");
+        console.error("no secret");
+        return {
+          secret: secret,
+          signOptions: { expiresIn: "600s" },
+        };
+      },
     }),
   ],
   providers: [

@@ -86,14 +86,6 @@ export class AuthService {
       "Issued new refresh token. User found for sign-in:",
       user.userName,
     );
-    console.log(
-      //need to delete
-      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-        process.env.REFRESH_TOKEN_SECRET +
-        "bbbbbbbbbbb" +
-        process.env.JWT_SECRET,
-      +"ccccccccccccccccc" + secretRefreshToken,
-    );
 
     return {
       accessToken: await this.jwtService.signAsync(payload),
