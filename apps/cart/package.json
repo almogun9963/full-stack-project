@@ -48,7 +48,7 @@
     "@types/jest": "29.5.14",
     "ts-jest": "29.2.5",
     "@repo/typescript-config": "*",
-    "typescript": "latest"
+    "typescript": "5.7.3"
   },
   "jest": {
     "moduleFileExtensions": [
