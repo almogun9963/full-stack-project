@@ -21,7 +21,7 @@ export class User implements UserType {
   password: string;
 
   @Prop({ nullable: true })
-  refreshTokens?: RefreshTokenEntity[];
+  refreshTokenEntity?: RefreshTokenEntity;
 
   @Field(() => Date)
   @Prop()

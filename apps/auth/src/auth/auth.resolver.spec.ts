@@ -13,9 +13,9 @@ describe("AuthResolver", () => {
     userName: "almog",
     password: "!Aa123456789",
     accessToken: "access-token",
-    refreshTokens: [
+    refreshTokenEntity: [
       { refreshToken: "refresh-token", expireAt: new Date() },
-    ] as RefreshTokenEntity[],
+    ] as RefreshTokenEntity,
   };
   const req = {} as Request;
   const res = {
@@ -30,7 +30,7 @@ describe("AuthResolver", () => {
           useValue: {
             signUp: jest.fn(),
             signIn: jest.fn(),
-            refreshTokenS: jest.fn(),
+            refreshTokenEntity: jest.fn(),
           },
         },
       ],

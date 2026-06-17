@@ -107,7 +107,7 @@ export class AuthService {
   }> {
     const userId = refreshInput.id;
     const user = await this.userRepository.findById(userId);
-    if (!user?.refreshTokens) {
+    if (!user?.refreshTokenEntity) {
       throw new UnauthorizedException("Invalid refresh token");
     }
 
@@ -117,8 +117,7 @@ export class AuthService {
     );
     if (
       await bcrypt.compare(
-        user.refreshTokens.at(user.refreshTokens.length - 1)?.refreshToken ||
-          "",
+        user.refreshTokenEntity.refreshToken || "",
         encryptedRefreshToken,
       )
     ) {

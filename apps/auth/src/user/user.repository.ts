@@ -31,11 +31,7 @@ export class UserRepository {
     } as RefreshTokenEntity;
 
     return this.userModel
-      .findByIdAndUpdate(
-        id,
-        { $push: { refreshTokens: refreshTokenEntity } },
-        { new: true },
-      )
+      .findByIdAndUpdate(id, { refreshTokenEntity }, { new: true })
       .exec();
   }
 }
