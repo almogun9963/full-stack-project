@@ -33,7 +33,7 @@ export class CartRepository {
   ): Promise<Cart | null> {
     return await this.cartModel
       .findOneAndUpdate(
-        { _id: id },
+        { _id: id, deletedAt: { $exists: false } },
         { $pull: { productsIds: productIdToRemove } },
         { new: true },
       )
