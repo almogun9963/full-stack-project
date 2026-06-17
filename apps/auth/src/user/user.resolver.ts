@@ -9,7 +9,9 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
   @UseGuards(AuthGuard)
   @Query(() => User, { name: "user" })
-  findOne(@Args("id", { type: () => String }) id: string) {
+  findOne(
+    @Args("id", { type: () => String }) id: string,
+  ): Promise<User | null> {
     return this.userService.findOne(id);
   }
 }

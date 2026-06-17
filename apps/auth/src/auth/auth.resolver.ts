@@ -1,6 +1,5 @@
 import { Resolver, Mutation, Args, Context } from "@nestjs/graphql";
 import { AuthService } from "./auth.service";
-import { User } from "../user/entities/user.entity";
 import { SignUpInput } from "./dto/sign-up.input";
 import { SignInInput } from "./dto/sign-in.input";
 import { RefreshInput } from "./dto/refresh.input";
@@ -11,24 +10,24 @@ import type { Response, Request } from "express";
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => User)
+  @Mutation(() => TokenResponse)
   async signUp(
     @Context() context: { res: Response; req: Request },
     @Args("signUpInput") signUpInput: SignUpInput,
-  ) {
-    const user = await this.authService.signUp(signUpInput);
-    context.res.cookie("accessToken", user.accessToken, {
+  ): Promise<TokenResponse> {
+    const tokenResponse = await this.authService.signUp(signUpInput);
+    context.res.cookie("accessToken", tokenResponse.refreshToken, {
       httpOnly: true,
       sameSite: "lax",
     });
-    return user;
+    return tokenResponse;
   }
 
   @Mutation(() => TokenResponse)
   async signIn(
     @Context() context: { res: Response },
     @Args("signInInput") signInInput: SignInInput,
-  ) {
+  ): Promise<TokenResponse> {
     const tokens = await this.authService.signIn(signInInput);
     context.res.cookie("accessToken", tokens.accessToken, {
       httpOnly: true,
@@ -38,7 +37,9 @@ export class AuthResolver {
   }
 
   @Mutation(() => TokenResponse)
-  async refresh(@Args("refreshInput") refreshInput: RefreshInput) {
+  async refresh(@Args("refreshInput") refreshInput: RefreshInput): Promise<{
+    accessToken: string;
+  }> {
     return this.authService.refreshTokens(refreshInput);
   }
 }

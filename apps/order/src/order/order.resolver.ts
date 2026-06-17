@@ -11,12 +11,12 @@ export class OrderResolver {
   createOrder(
     @getUser("userId") userId: string,
     @Args("createOrderInput") createOrderInput: CreateOrderInput,
-  ) {
+  ): Promise<Order> {
     return this.orderService.create(userId, createOrderInput);
   }
 
   @Query(() => [Order], { name: "getOrdersByUser" })
-  getOrdersByUser(@getUser("userId") userId: string) {
+  getOrdersByUser(@getUser("userId") userId: string): Promise<Order[]> {
     return this.orderService.getOrdersByUser(userId);
   }
 }

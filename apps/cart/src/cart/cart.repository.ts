@@ -8,18 +8,19 @@ export class CartRepository {
   constructor(@InjectModel(Cart.name) private cartModel: Model<Cart>) {}
 
   async create(userId: string): Promise<Cart> {
-    const createdCart = new this.cartModel({ userId });
-    return await createdCart.save();
+    return new this.cartModel({ userId }).save();
   }
 
   async findById(id: string): Promise<Cart | null> {
-    return await this.cartModel.findOne({ _id: id }).exec();
+    return this.cartModel
+      .findOne({ _id: id, deletedAt: { $exists: false } })
+      .exec();
   }
 
   async addProduct(id: string, productIdToAdd: string): Promise<Cart | null> {
     return await this.cartModel
       .findOneAndUpdate(
-        { _id: id },
+        { _id: id, deletedAt: { $exists: false } },
         { $push: { productsIds: productIdToAdd } },
         { new: true },
       )

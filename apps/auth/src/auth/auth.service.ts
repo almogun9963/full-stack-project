@@ -24,12 +24,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async signUp(signUpInput: SignUpInput): Promise<{
-    id: string;
-    userName: string;
-    accessToken: string;
-    refreshToken: string;
-  }> {
+  async signUp(signUpInput: SignUpInput): Promise<TokenResponse> {
     const hashedPassword = await bcrypt.hash(signUpInput?.password, 10);
 
     const createdUser = await this.userRepository.create({
@@ -97,6 +92,8 @@ export class AuthService {
     );
 
     return {
+      id: userId,
+      userName: user.userName,
       accessToken: await this.jwtService.signAsync(payload),
       refreshToken: refreshToken,
     };
