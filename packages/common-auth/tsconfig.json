@@ -14,7 +14,6 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": "./",
     "incremental": false,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -24,5 +23,8 @@
     "noFallthroughCasesInSwitch": false,
     "composite": false,
     "declarationMap": true,
+    "paths": {
+      "*": ["./src/*"]
+    },
   }
 }
