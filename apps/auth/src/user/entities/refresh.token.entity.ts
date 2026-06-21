@@ -1,5 +1,6 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Types } from "mongoose";
 
 @ObjectType()
 @Schema({
@@ -8,20 +9,28 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
   toObject: { virtuals: true },
 })
 export class RefreshTokenEntity {
-  @Field(() => ID)
+  @Field(() => String)
   id?: string;
 
   @Field()
+  @Prop({ type: String, ref: "User", required: true, unique: true })
+  userId: string;
+
+  @Field()
+  @Prop()
   expireAt: Date;
 
   @Prop({ nullable: true })
+  @Field()
   refreshToken: string;
 }
 
-export const refreshTokenSchema =
+export const RefreshTokenSchema =
   SchemaFactory.createForClass(RefreshTokenEntity);
-refreshTokenSchema.set("toObject", { virtuals: true });
-refreshTokenSchema.set("toJSON", { virtuals: true });
-refreshTokenSchema.virtual("id").get(function () {
+RefreshTokenSchema.set("toObject", { virtuals: true });
+RefreshTokenSchema.set("toJSON", { virtuals: true });
+RefreshTokenSchema.index({ userId: 1 });
+RefreshTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+RefreshTokenSchema.virtual("id").get(function () {
   return this._id.toHexString();
 });

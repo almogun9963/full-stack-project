@@ -9,14 +9,20 @@ import { ApolloFederationDriver } from "@nestjs/apollo";
 import { Request, Response } from "express";
 import { UserRepository } from "../user/user.repository";
 
+import {
+  RefreshTokenEntity,
+  RefreshTokenSchema,
+} from "../user/entities/refresh.token.entity";
+
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: userSchema },
+      { name: RefreshTokenEntity.name, schema: RefreshTokenSchema },
+    ]),
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,
-      autoSchemaFile: {
-        federation: 2,
-      },
+      autoSchemaFile: { federation: 2 },
       context: ({ req, res }: { req: Request; res: Response }) => ({
         req,
         res,

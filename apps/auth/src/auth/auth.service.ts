@@ -10,7 +10,7 @@ import bcrypt from "bcrypt";
 import { SignUpInput } from "./dto/sign-up.input";
 import { SignInInput } from "./dto/sign-in.input";
 import { RefreshInput } from "./dto/refresh.input";
-import { TokenResponse } from "./entities/token.response";
+import { TokenResponse } from "./schemas/token-response.scema";
 import { UserRepository } from "../user/user.repository";
 import { ConfigService } from "@nestjs/config";
 
@@ -40,20 +40,10 @@ export class AuthService {
       id: userId,
       username: createdUser.userName,
     };
-    const secretRefreshToken = this.configService.get<string>(
-      "REFRESH_TOKEN_SECRET",
-    );
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: secretRefreshToken,
-      expiresIn: "7d",
-    });
-
-    await this.userRepository.updateRefreshToken(
-      userId,
-      await bcrypt.hash(refreshToken, 10),
-    );
+    const refreshToken = await this.generateRefreshToken(payload);
 
     const accessToken = await this.jwtService.signAsync(payload);
+
     return {
       id: userId,
       userName: createdUser.userName,
@@ -85,7 +75,7 @@ export class AuthService {
     }
     const payload = { id: userId, username: user.userName };
 
-    const refreshToken = await this.generateRefreshToken(userId, payload);
+    const refreshToken = await this.generateRefreshToken(payload);
     this.logger.log(
       "Issued new refresh token. User found for sign-in:",
       user.userName,
@@ -103,36 +93,34 @@ export class AuthService {
     accessToken: string;
   }> {
     const userId = refreshInput.id;
-    const user = await this.userRepository.findById(userId);
-    if (!user?.refreshTokenEntity) {
-      throw new UnauthorizedException("Invalid refresh token");
-    }
-
-    const encryptedRefreshToken = await bcrypt.hash(
-      refreshInput.refreshToken,
-      10,
+    const secretRefreshToken = this.configService.get<string>(
+      "REFRESH_TOKEN_SECRET",
     );
-    if (
-      await bcrypt.compare(
-        user.refreshTokenEntity.refreshToken || "",
-        encryptedRefreshToken,
-      )
-    ) {
-      return {
-        accessToken: await this.jwtService.signAsync({
-          id: userId,
-          userName: user.userName,
-        }),
-      };
+
+    if (!secretRefreshToken) {
+      throw new Error(
+        "JWT_SECRET is missing from the environment configuration",
+      );
+    }
+    try {
+      this.jwtService.verify(refreshInput.refreshToken, {
+        secret: secretRefreshToken,
+      });
+    } catch {
+      throw new UnauthorizedException();
     }
 
-    throw new UnauthorizedException("Invalid refresh token");
+    return {
+      accessToken: await this.jwtService.signAsync({
+        id: userId,
+      }),
+    };
   }
 
-  async generateRefreshToken(
-    userId: string,
-    payload: { id: string; username: string },
-  ): Promise<string> {
+  async generateRefreshToken(payload: {
+    id: string;
+    username: string;
+  }): Promise<string> {
     const secretRefreshToken = this.configService.get<string>(
       "REFRESH_TOKEN_SECRET",
     );
@@ -141,9 +129,6 @@ export class AuthService {
       secret: secretRefreshToken,
       expiresIn: "7d",
     });
-
-    await this.userRepository.updateRefreshToken(userId, newRefreshToken);
-
     return newRefreshToken;
   }
 }

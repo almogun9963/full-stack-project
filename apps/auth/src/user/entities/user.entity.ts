@@ -1,7 +1,6 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { UserType } from "@repo/common-types";
-import { RefreshTokenEntity } from "./refresh.token.entity";
 
 @ObjectType()
 @Schema({
@@ -19,9 +18,6 @@ export class User implements UserType {
 
   @Prop()
   password: string;
-
-  @Prop({ nullable: true })
-  refreshTokenEntity?: RefreshTokenEntity;
 
   @Field(() => Date)
   @Prop()
