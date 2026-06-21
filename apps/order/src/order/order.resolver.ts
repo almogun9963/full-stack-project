@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { OrderService } from "./order.service";
 import { Order } from "./entities/order.entity";
-import { CreateOrderInput } from "./dto/create-order.input";
+import { CreateOrderInput } from "./entities/create-order.input";
 import { getUser } from "@repo/common-auth";
 @Resolver(() => Order)
 export class OrderResolver {

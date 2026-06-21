@@ -31,7 +31,7 @@ Generates fake product data and seeds it directly into MongoDB. Clears existing 
 **Prerequisites:**
 
 - MongoDB server running
-- `MONGODB_URI` environment variable set (defaults to `mongodb://localhost:27017/products`)
+- `MONGODB_URI` environment variable set (defaults to `mongodb://localhost:27017/store`)
 
 **Usage:**
 

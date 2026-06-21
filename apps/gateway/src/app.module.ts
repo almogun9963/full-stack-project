@@ -1,55 +1,58 @@
 import { Module } from "@nestjs/common";
-import { Request } from "express";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from "@nestjs/apollo";
-import { IntrospectAndCompose, RemoteGraphQLDataSource } from "@apollo/gateway";
-import { ConfigModule } from "@nestjs/config";
+import { IntrospectAndCompose } from "@apollo/gateway";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: ".env",
-      isGlobal: true,
-    }),
-    GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
-      server: {
-        context: ({ req }: { req: Request }) => ({ headers: req.headers }),
-      },
-      gateway: {
-        supergraphSdl: new IntrospectAndCompose({
-          subgraphs: [
-            { name: "product", url: "http://localhost:3001/graphql" },
-            { name: "cart", url: "http://localhost:3002/graphql" },
-            { name: "order", url: "http://localhost:3003/graphql" },
-            { name: "user", url: "http://localhost:3004/graphql" },
-          ],
-        }),
-        buildService({ url }) {
-          return new RemoteGraphQLDataSource<{
-            headers?: Record<string, string>;
-          }>({
-            url,
-            willSendRequest({
-              request,
-              context,
-            }: {
-              request?: {
-                http?: { headers: { set(name: string, value: string): void } };
-              };
-              context?: { headers?: Record<string, string> };
-            }) {
-              const incomingHeaders = context?.headers;
 
-              if (incomingHeaders?.authorization) {
-                request?.http?.headers.set(
-                  "authorization",
-                  incomingHeaders.authorization,
-                );
-              }
-            },
-          });
-        },
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: ["../../.env"],
+          isGlobal: true,
+        }),
+      ],
+      inject: [ConfigService],
+
+      useFactory: (configService: ConfigService) => {
+        const MICROSERVICES_URI =
+          configService.get<string>("MICROSERVICES_URI");
+        const PRODUCTS_PORT = configService.get<string>("PRODUCTS_PORT");
+        const CART_PORT = configService.get<string>("CART_PORT");
+        const ORDER_PORT = configService.get<string>("ORDER_PORT");
+        const USER_PORT = configService.get<string>("USER_PORT");
+
+        return {
+          server: {
+            context: ({ req }: { req: Request }) => ({ headers: req.headers }),
+          },
+
+          gateway: {
+            supergraphSdl: new IntrospectAndCompose({
+              subgraphs: [
+                {
+                  name: "product",
+                  url: MICROSERVICES_URI + ":" + PRODUCTS_PORT + "/graphql",
+                },
+                {
+                  name: "cart",
+                  url: MICROSERVICES_URI + ":" + CART_PORT + "/graphql",
+                },
+                {
+                  name: "order",
+                  url: MICROSERVICES_URI + ":" + ORDER_PORT + "/graphql",
+                },
+                {
+                  name: "user",
+                  url: MICROSERVICES_URI + ":" + USER_PORT + "/graphql",
+                },
+              ],
+            }),
+          },
+        };
       },
     }),
   ],

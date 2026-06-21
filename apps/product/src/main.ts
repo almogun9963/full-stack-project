@@ -3,6 +3,7 @@ import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 import { registerEnumType } from "@nestjs/graphql";
 import { Tag } from "@repo/common-types";
+import { ConfigService } from "@nestjs/config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +12,7 @@ async function bootstrap() {
   registerEnumType(Tag, {
     name: "Tag",
   });
-
-  await app.listen(3001);
+  const configService = app.get(ConfigService);
+  await app.listen(configService.get<string>("PRODUCTS_PORT") || "");
 }
 void bootstrap();

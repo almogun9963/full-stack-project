@@ -9,10 +9,10 @@ export class CartService {
     return this.cartRepository.create(userId);
   }
 
-  async getCartById(id: string): Promise<Cart | null> {
+  async getCartById(id: string): Promise<Cart> {
     const cart = await this.cartRepository.findById(id);
 
-    if (cart == null) {
+    if (!cart) {
       throw new NotFoundException(`Cart with id ${id} not found`);
     }
 
@@ -31,7 +31,9 @@ export class CartService {
   }
 
   async deleteCart(id: string): Promise<string> {
-    await this.cartRepository.delete(id);
-    return "Cart with id " + id + " has been deleted";
+    const isDeleted = await this.cartRepository.delete(id);
+    return isDeleted
+      ? "Cart with id " + id + " has been deleted"
+      : "cart not found";
   }
 }

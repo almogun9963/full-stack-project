@@ -41,7 +41,7 @@ export class AuthResolver {
     context.res.cookie("accessToken", accessToken, {
       httpOnly: true,
       path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 1 * 60 * 60 * 1000,
     });
 
     return accessToken;
@@ -54,7 +54,7 @@ export class AuthResolver {
     context.res.cookie("accessToken", tokenResponse.accessToken, {
       httpOnly: true,
       path: "/",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 1 * 60 * 60 * 1000,
     });
 
     context.res.cookie("refreshToken", tokenResponse.refreshToken, {

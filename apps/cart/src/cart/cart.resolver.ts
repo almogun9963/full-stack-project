@@ -51,6 +51,7 @@ export class CartResolver {
   ): Promise<Cart | null> {
     return this.cartService.removeFromCart(id, productIdToRemove);
   }
+
   // @ResolveField(() => [Product])
   // async products(@Parent() cart: Cart): Promise<(Product | Error)[]> {
   //   const loader = this.productDataLoader.createLoader();
