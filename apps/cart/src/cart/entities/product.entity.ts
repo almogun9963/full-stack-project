@@ -7,44 +7,35 @@ import { ProductType, Tag } from "@repo/common-types";
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
 })
-export class Product implements ProductType {
+export class ProductInsideCart implements ProductType {
   @Field(() => ID)
   id: string;
 
-  @Prop()
   @Field()
   name: string;
 
   @Field()
-  @Prop()
   price: number;
 
   @Field()
-  @Prop()
   company: string;
 
   @Field()
-  @Prop()
   productType: string;
 
   @Field(() => [Number])
-  @Prop({ type: [Number], default: [] })
   ratings: number[];
 
   @Field()
-  @Prop()
   description: string;
 
   @Field()
-  @Prop()
   size: string;
 
   @Field(() => [Tag])
-  @Prop({ type: [String], enum: Tag, default: [Tag.Budget] })
   tags: Tag[];
 
   @Field()
-  @Prop()
   imageUrl: string;
 
   @Field()
@@ -52,15 +43,13 @@ export class Product implements ProductType {
   isAvailable: boolean;
 
   @Field(() => Date)
-  @Prop()
   createdAt: Date;
 
   @Field(() => Date)
-  @Prop()
   updatedAt: Date;
 }
 
-export const productSchema = SchemaFactory.createForClass(Product);
+export const productSchema = SchemaFactory.createForClass(ProductInsideCart);
 productSchema.set("toObject", { virtuals: true });
 productSchema.set("toJSON", { virtuals: true });
 productSchema.virtual("id").get(function () {

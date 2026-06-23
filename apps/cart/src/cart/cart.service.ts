@@ -26,9 +26,7 @@ export class CartService {
 
   async addToCart(id: string, productIdToAdd: string): Promise<Cart | null> {
     try {
-      const product = await firstValueFrom(
-        this.client.send({ cmd: "getProductById" }, productIdToAdd),
-      );
+      const product = this.getProductById(productIdToAdd);
 
       if (!product) {
         return null;
@@ -40,10 +38,27 @@ export class CartService {
     }
   }
 
+  async getProductById(productIdToAdd: string) {
+    try {
+      const product = await firstValueFrom(
+        this.client.send({ cmd: "getProductById" }, productIdToAdd),
+      );
+
+      return product;
+    } catch {
+      throw new NotFoundException("Product does not exist");
+    }
+  }
+
   async removeFromCart(
     id: string,
     productIdToRemove: string,
   ): Promise<Cart | null> {
+    const cart = await this.getCartById(id);
+    if (cart.productsIds.includes(productIdToRemove)) {
+      throw new NotFoundException("Product does not exist");
+    }
+
     return this.cartRepository.removeProduct(id, productIdToRemove);
   }
 

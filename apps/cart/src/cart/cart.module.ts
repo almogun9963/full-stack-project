@@ -11,6 +11,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { CartRepository } from "./cart.repository";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { ClientsModule, Transport } from "@nestjs/microservices";
+import { ProductsDataLoader } from "./products.dataloader";
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
     }),
   ],
   providers: [
+    ProductsDataLoader,
     CartResolver,
     {
       provide: APP_GUARD,

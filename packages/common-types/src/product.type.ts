@@ -23,8 +23,6 @@ export interface ProductType {
 
   isAvailable: boolean;
 
-  category: string;
-
   createdAt: Date;
 
   updatedAt: Date;

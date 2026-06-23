@@ -16,13 +16,16 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
     const gqlContext = ctx.getContext();
+    console.log("gqlContext");
 
+    console.log(gqlContext);
     if (!gqlContext) {
       return true;
     }
-    const token = this.extractTokenFromHeader(gqlContext.req);
+    const token = this.extractTokenFromHeader(gqlContext?.req);
 
     if (!token) {
+      console.log("couldnt extract token from header");
       throw new UnauthorizedException("couldnt extract token from header");
     }
 

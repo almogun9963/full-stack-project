@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { CartType } from "@repo/common-types";
+import { ProductInsideCart } from "./product.entity";
 
 @ObjectType()
 @Schema({
@@ -19,6 +20,9 @@ export class Cart implements CartType {
   @Field(() => [String], { defaultValue: [] })
   @Prop()
   productsIds: string[];
+
+  @Field(() => [ProductInsideCart], { defaultValue: [] })
+  products: ProductInsideCart[];
 
   @Field(() => Date, { nullable: true })
   @Prop()

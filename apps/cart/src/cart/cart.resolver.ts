@@ -1,12 +1,23 @@
-import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from "@nestjs/graphql";
 import { CartService } from "./cart.service";
 import { Cart } from "./entities/cart.entity";
 import { getUser } from "@repo/common-auth";
-import { NotFoundException } from "@nestjs/common";
+import { ProductsDataLoader } from "./products.dataloader";
+import { ProductInsideCart } from "./entities/product.entity";
 
 @Resolver(() => Cart)
 export class CartResolver {
-  constructor(private readonly cartService: CartService) {}
+  constructor(
+    private readonly cartService: CartService,
+    private readonly productDataLoader: ProductsDataLoader,
+  ) {}
 
   @Mutation(() => Cart)
   createCart(@getUser("userId") userId: string): Promise<Cart> {
@@ -42,5 +53,13 @@ export class CartResolver {
     productIdToRemove: string,
   ): Promise<Cart | null> {
     return this.cartService.removeFromCart(id, productIdToRemove);
+  }
+
+  @ResolveField(() => [])
+  async products(@Parent() cart: Cart): Promise<(ProductInsideCart | Error)[]> {
+    const loader = this.productDataLoader.createLoader();
+    const data = await loader.loadMany(cart.productsIds);
+
+    return data;
   }
 }
