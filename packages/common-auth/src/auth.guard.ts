@@ -16,10 +16,14 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
     const gqlContext = ctx.getContext();
+
+    if (!gqlContext) {
+      return true;
+    }
     const token = this.extractTokenFromHeader(gqlContext.req);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("couldnt extract token from header");
     }
 
     const secret = this.configService.get<string>("JWT_SECRET");
@@ -41,6 +45,7 @@ export class AuthGuard implements CanActivate {
 
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers?.authorization?.split(" ") ?? [];
+
     return type === "Bearer" ? token : undefined;
   }
 }

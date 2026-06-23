@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { ProductsRepository } from "./products.repository";
+import { ProductsController } from "./products.controller";
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Product.name, schema: productSchema }]),
@@ -46,5 +47,6 @@ import { ProductsRepository } from "./products.repository";
     ProductsService,
     ProductsRepository,
   ],
+  controllers: [ProductsController],
 })
 export class ProductsModule {}

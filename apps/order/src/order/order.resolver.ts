@@ -19,4 +19,9 @@ export class OrderResolver {
   getOrdersByUser(@getUser("userId") userId: string): Promise<Order[]> {
     return this.orderService.getOrdersByUser(userId);
   }
+
+  @Query(() => [Order])
+  findById(@Args("id") id: string): Promise<Order | null> {
+    return this.orderService.findById(id);
+  }
 }

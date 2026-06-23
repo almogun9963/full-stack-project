@@ -1,9 +1,14 @@
 import { CartRepository } from "./cart.repository";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { Cart } from "./entities/cart.entity";
+import { firstValueFrom } from "rxjs";
+import { ClientProxy } from "@nestjs/microservices";
 @Injectable()
 export class CartService {
-  constructor(private cartRepository: CartRepository) {}
+  constructor(
+    private cartRepository: CartRepository,
+    @Inject("PRODUCT_SERVICE") private client: ClientProxy,
+  ) {}
 
   async create(userId: string) {
     return this.cartRepository.create(userId);
@@ -20,6 +25,14 @@ export class CartService {
   }
 
   async addToCart(id: string, productIdToAdd: string): Promise<Cart | null> {
+    const product = await firstValueFrom(
+      this.client.send({ cmd: "getProductById" }, productIdToAdd),
+    );
+
+    if (!product) {
+      throw new NotFoundException("Product does not exist");
+    }
+
     return this.cartRepository.addProduct(id, productIdToAdd);
   }
 

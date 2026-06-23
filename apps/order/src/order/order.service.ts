@@ -17,4 +17,7 @@ export class OrderService {
   async getOrdersByUser(userId: string): Promise<Order[]> {
     return this.orderRepository.findByUserId(userId);
   }
+  async findById(userId: string): Promise<Order | null> {
+    return this.orderRepository.findById(userId);
+  }
 }

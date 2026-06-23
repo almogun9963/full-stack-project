@@ -19,4 +19,8 @@ export class OrderRepository {
   async findByUserId(userId: string): Promise<Order[]> {
     return await this.orderModel.find({ userId }).limit(50).exec();
   }
+
+  async findById(id: string): Promise<Order | null> {
+    return await this.orderModel.findById(id).exec();
+  }
 }

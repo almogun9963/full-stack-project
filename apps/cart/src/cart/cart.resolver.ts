@@ -1,22 +1,12 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  ResolveField,
-  Parent,
-} from "@nestjs/graphql";
+import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { CartService } from "./cart.service";
 import { Cart } from "./entities/cart.entity";
 import { getUser } from "@repo/common-auth";
-// import { ProductDataLoader } from "../../../../apps/product/src/products/product.dataloader";
-// import { Product } from "../../../product/src/products/entities/product.entity";
+import { NotFoundException } from "@nestjs/common";
+
 @Resolver(() => Cart)
 export class CartResolver {
-  constructor(
-    private readonly cartService: CartService,
-    // private productDataLoader: ProductDataLoader,
-  ) {}
+  constructor(private readonly cartService: CartService) {}
 
   @Mutation(() => Cart)
   createCart(@getUser("userId") userId: string): Promise<Cart> {
@@ -31,11 +21,23 @@ export class CartResolver {
   }
 
   @Mutation(() => Cart)
-  addToCartById(
+  async addToCartById(
     @Args("id", { type: () => String }) id: string,
     @Args("productIdToAdd", { type: () => String }) productIdToAdd: string,
   ): Promise<Cart | null> {
-    return this.cartService.addToCart(id, productIdToAdd);
+    try {
+      await this.cartService.getCartById(id);
+    } catch {
+      throw new NotFoundException(`Card with id ${id} not found`);
+    }
+
+    try {
+      return this.cartService.addToCart(id, productIdToAdd);
+    } catch {
+      throw new NotFoundException(
+        `Product with id ${productIdToAdd} not found`,
+      );
+    }
   }
 
   @Mutation(() => String)
@@ -51,10 +53,4 @@ export class CartResolver {
   ): Promise<Cart | null> {
     return this.cartService.removeFromCart(id, productIdToRemove);
   }
-
-  // @ResolveField(() => [Product])
-  // async products(@Parent() cart: Cart): Promise<(Product | Error)[]> {
-  //   const loader = this.productDataLoader.createLoader();
-  //   return await loader.loadMany(cart.productsIds);
-  // }
 }

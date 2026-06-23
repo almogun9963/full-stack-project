@@ -10,9 +10,21 @@ import { AuthGuard } from "@repo/common-auth";
 import { JwtModule } from "@nestjs/jwt";
 import { CartRepository } from "./cart.repository";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ClientsModule, Transport } from "@nestjs/microservices";
 
 @Module({
   imports: [
+    ClientsModule.register([
+      {
+        name: "PRODUCT_SERVICE",
+        transport: Transport.TCP,
+        options: {
+          host: "localhost",
+          port: 3007,
+        },
+      },
+    ]),
+
     MongooseModule.forFeature([{ name: Cart.name, schema: cartSchema }]),
     GraphQLModule.forRoot({
       driver: ApolloFederationDriver,

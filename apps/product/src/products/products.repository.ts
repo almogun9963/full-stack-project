@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { FilterQuery, Model } from "mongoose";
 import { Product } from "./entities/product.entity";
@@ -12,8 +12,12 @@ export class ProductsRepository {
   ) {}
 
   async create(createProductInput: CreateProductDto): Promise<Product> {
-    const createdProduct = new this.productModel(createProductInput);
-    return await createdProduct.save();
+    try {
+      const createdProduct = new this.productModel(createProductInput);
+      return await createdProduct.save();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async findWithFilters(filters?: FiltersProductInput): Promise<Product[]> {
@@ -47,7 +51,11 @@ export class ProductsRepository {
   }
 
   async findById(id: string): Promise<Product | null> {
-    return await this.productModel.findOne({ _id: id }).exec();
+    try {
+      return await this.productModel.findOne({ _id: id }).exec();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async deleteById(id: string): Promise<void> {

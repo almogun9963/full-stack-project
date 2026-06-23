@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from "@nestjs/apollo";
-import { IntrospectAndCompose } from "@apollo/gateway";
+import { IntrospectAndCompose, RemoteGraphQLDataSource } from "@apollo/gateway";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
@@ -26,11 +26,27 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         const USER_PORT = configService.get<string>("USER_PORT");
 
         return {
+          driver: ApolloGatewayDriver,
           server: {
             context: ({ req }: { req: Request }) => ({ headers: req.headers }),
           },
-
           gateway: {
+            buildService({ url }) {
+              return new RemoteGraphQLDataSource<{
+                headers?: Record<string, string>;
+              }>({
+                url,
+                willSendRequest({ request, context }) {
+                  const incomingHeaders = context?.headers;
+                  if (incomingHeaders?.authorization) {
+                    request?.http?.headers.set(
+                      "authorization",
+                      incomingHeaders.authorization,
+                    );
+                  }
+                },
+              });
+            },
             supergraphSdl: new IntrospectAndCompose({
               subgraphs: [
                 {
