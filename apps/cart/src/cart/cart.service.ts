@@ -25,15 +25,19 @@ export class CartService {
   }
 
   async addToCart(id: string, productIdToAdd: string): Promise<Cart | null> {
-    const product = await firstValueFrom(
-      this.client.send({ cmd: "getProductById" }, productIdToAdd),
-    );
+    try {
+      const product = await firstValueFrom(
+        this.client.send({ cmd: "getProductById" }, productIdToAdd),
+      );
 
-    if (!product) {
+      if (!product) {
+        return null;
+      }
+
+      return this.cartRepository.addProduct(id, productIdToAdd);
+    } catch {
       throw new NotFoundException("Product does not exist");
     }
-
-    return this.cartRepository.addProduct(id, productIdToAdd);
   }
 
   async removeFromCart(

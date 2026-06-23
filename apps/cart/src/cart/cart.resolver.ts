@@ -25,19 +25,9 @@ export class CartResolver {
     @Args("id", { type: () => String }) id: string,
     @Args("productIdToAdd", { type: () => String }) productIdToAdd: string,
   ): Promise<Cart | null> {
-    try {
-      await this.cartService.getCartById(id);
-    } catch {
-      throw new NotFoundException(`Card with id ${id} not found`);
-    }
+    await this.cartService.getCartById(id);
 
-    try {
-      return this.cartService.addToCart(id, productIdToAdd);
-    } catch {
-      throw new NotFoundException(
-        `Product with id ${productIdToAdd} not found`,
-      );
-    }
+    return this.cartService.addToCart(id, productIdToAdd);
   }
 
   @Mutation(() => String)
