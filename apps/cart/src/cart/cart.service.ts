@@ -3,6 +3,7 @@ import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { Cart } from "./entities/cart.entity";
 import { firstValueFrom } from "rxjs";
 import { ClientProxy } from "@nestjs/microservices";
+import { ProductInsideCart } from "./entities/product.entity";
 
 @Injectable()
 export class CartService {
@@ -31,19 +32,22 @@ export class CartService {
     productIdToAdd: string,
   ): Promise<Cart | null> {
     try {
-      const product = this.getProductById(token, productIdToAdd);
+      const product = await this.getProductById(token, productIdToAdd);
 
       if (!product) {
-        return null;
+        throw new NotFoundException("Product does not exist - add to cart");
       }
 
-      return this.cartRepository.addProduct(id, productIdToAdd);
+      return await this.cartRepository.addProduct(id, productIdToAdd);
     } catch {
       throw new NotFoundException("Product does not exist - add to cart");
     }
   }
 
-  async getProductById(token: string, productIdToAdd: string) {
+  async getProductById(
+    token: string,
+    productIdToAdd: string,
+  ): Promise<ProductInsideCart> {
     try {
       const payload = {
         token: token,
@@ -64,7 +68,7 @@ export class CartService {
     productIdToRemove: string,
   ): Promise<Cart | null> {
     const cart = await this.getCartById(id);
-    if (cart.productsIds.includes(productIdToRemove)) {
+    if (!cart.productsIds.includes(productIdToRemove)) {
       throw new NotFoundException("Product does not exist - remove from cart");
     }
 

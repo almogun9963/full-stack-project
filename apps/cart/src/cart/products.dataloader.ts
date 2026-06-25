@@ -15,7 +15,7 @@ export class ProductsDataLoader {
   createLoader() {
     return new DataLoader<string, ProductInsideCart>(
       async (productIds: readonly string[]) => {
-        const req: Request = this.request.req || this.request;
+        const req: Request = this.request.req;
         const token = req.get("Authorization")?.split(" ")[1]?.toString() || "";
         const products = await Promise.all(
           productIds.map((id) => this.cartService.getProductById(token, id)),

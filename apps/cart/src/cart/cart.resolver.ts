@@ -13,6 +13,7 @@ import { ProductsDataLoader } from "./products.dataloader";
 import { ProductInsideCart } from "./entities/product.entity";
 import { Context } from "@nestjs/graphql";
 import { Request, Response } from "express";
+import { NotFoundException } from "@nestjs/common";
 @Resolver(() => Cart)
 export class CartResolver {
   constructor(
@@ -38,11 +39,19 @@ export class CartResolver {
     @Args("id", { type: () => String }) id: string,
     @Args("productIdToAdd", { type: () => String }) productIdToAdd: string,
   ): Promise<Cart | null> {
-    await this.cartService.getCartById(id);
+    try {
+      await this.cartService.getCartById(id);
+    } catch {
+      throw new NotFoundException("Cart does not exist - remove from cart");
+    }
 
-    const token =
-      context.req.get("Authorization")?.split(" ")[1].toString() || "";
-    return this.cartService.addToCart(token, id, productIdToAdd);
+    try {
+      const token =
+        context.req.get("Authorization")?.split(" ")[1].toString() || "";
+      return await this.cartService.addToCart(token, id, productIdToAdd);
+    } catch {
+      throw new NotFoundException("Product does not exist - remove from cart");
+    }
   }
 
   @Mutation(() => String)
@@ -56,7 +65,11 @@ export class CartResolver {
     @Args("productIdToRemove", { type: () => String })
     productIdToRemove: string,
   ): Promise<Cart | null> {
-    return this.cartService.removeFromCart(id, productIdToRemove);
+    try {
+      return this.cartService.removeFromCart(id, productIdToRemove);
+    } catch {
+      throw new NotFoundException("Product does not exist - remove from cart");
+    }
   }
 
   @ResolveField(() => [])
