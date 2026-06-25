@@ -32,6 +32,10 @@ import { ProductsDataLoader } from "./products.dataloader";
       autoSchemaFile: {
         federation: 2,
       },
+      context: ({ req, res }: { req: Request; res: Response }) => ({
+        req,
+        res,
+      }),
     }),
     JwtModule.registerAsync({
       global: true,

@@ -11,7 +11,8 @@ import { Cart } from "./entities/cart.entity";
 import { getUser } from "@repo/common-auth";
 import { ProductsDataLoader } from "./products.dataloader";
 import { ProductInsideCart } from "./entities/product.entity";
-
+import { Context } from "@nestjs/graphql";
+import { Request, Response } from "express";
 @Resolver(() => Cart)
 export class CartResolver {
   constructor(
@@ -33,12 +34,15 @@ export class CartResolver {
 
   @Mutation(() => Cart)
   async addToCartById(
+    @Context() context: { res: Response; req: Request },
     @Args("id", { type: () => String }) id: string,
     @Args("productIdToAdd", { type: () => String }) productIdToAdd: string,
   ): Promise<Cart | null> {
     await this.cartService.getCartById(id);
 
-    return this.cartService.addToCart(id, productIdToAdd);
+    const token =
+      context.req.get("Authorization")?.split(" ")[1].toString() || "";
+    return this.cartService.addToCart(token, id, productIdToAdd);
   }
 
   @Mutation(() => String)

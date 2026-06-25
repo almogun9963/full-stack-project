@@ -3,6 +3,7 @@ import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { Cart } from "./entities/cart.entity";
 import { firstValueFrom } from "rxjs";
 import { ClientProxy } from "@nestjs/microservices";
+
 @Injectable()
 export class CartService {
   constructor(
@@ -24,9 +25,13 @@ export class CartService {
     return cart;
   }
 
-  async addToCart(id: string, productIdToAdd: string): Promise<Cart | null> {
+  async addToCart(
+    token: string,
+    id: string,
+    productIdToAdd: string,
+  ): Promise<Cart | null> {
     try {
-      const product = this.getProductById(productIdToAdd);
+      const product = this.getProductById(token, productIdToAdd);
 
       if (!product) {
         return null;
@@ -34,19 +39,23 @@ export class CartService {
 
       return this.cartRepository.addProduct(id, productIdToAdd);
     } catch {
-      throw new NotFoundException("Product does not exist");
+      throw new NotFoundException("Product does not exist - add to cart");
     }
   }
 
-  async getProductById(productIdToAdd: string) {
+  async getProductById(token: string, productIdToAdd: string) {
     try {
+      const payload = {
+        token: token,
+        productIdToAdd: productIdToAdd,
+      };
       const product = await firstValueFrom(
-        this.client.send({ cmd: "getProductById" }, productIdToAdd),
+        this.client.send({ cmd: "getProductById" }, payload),
       );
 
       return product;
     } catch {
-      throw new NotFoundException("Product does not exist");
+      throw new NotFoundException("Product does not exist - get Product");
     }
   }
 
@@ -56,7 +65,7 @@ export class CartService {
   ): Promise<Cart | null> {
     const cart = await this.getCartById(id);
     if (cart.productsIds.includes(productIdToRemove)) {
-      throw new NotFoundException("Product does not exist");
+      throw new NotFoundException("Product does not exist - remove from cart");
     }
 
     return this.cartRepository.removeProduct(id, productIdToRemove);

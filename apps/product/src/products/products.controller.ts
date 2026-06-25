@@ -1,17 +1,16 @@
 import { Controller } from "@nestjs/common";
-import { Ctx, MessagePattern, NatsContext } from "@nestjs/microservices";
+import { MessagePattern } from "@nestjs/microservices";
 import { Product } from "./entities/product.entity";
 import { ProductsService } from "./products.service";
+
 @Controller()
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
-
   @MessagePattern({ cmd: "getProductById" })
-  getProductById(
-    productIdToAdd: string,
-    @Ctx() ctx: NatsContext,
-  ): Promise<Product> {
-    // console.log(ctx);
-    return this.productsService.getProductById(productIdToAdd);
+  getProductById(payload: {
+    productIdToAdd: string;
+    token: string;
+  }): Promise<Product> {
+    return this.productsService.getProductById(payload.productIdToAdd);
   }
 }
