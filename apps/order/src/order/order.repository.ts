@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Order } from "./entities/order.entity";
@@ -12,15 +12,27 @@ export class OrderRepository {
     userId: string,
     createOrderInput: CreateOrderInput,
   ): Promise<Order> {
-    const createdOrder = new this.orderModel({ ...createOrderInput, userId });
-    return await createdOrder.save();
+    try {
+      const createdOrder = new this.orderModel({ ...createOrderInput, userId });
+      return await createdOrder.save();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async findByUserId(userId: string): Promise<Order[]> {
-    return await this.orderModel.find({ userId }).limit(50).exec();
+    try {
+      return await this.orderModel.find({ userId }).limit(50).exec();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async findById(id: string): Promise<Order | null> {
-    return await this.orderModel.findById(id).exec();
+    try {
+      return await this.orderModel.findById(id).exec();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }

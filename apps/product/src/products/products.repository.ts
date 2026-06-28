@@ -59,6 +59,10 @@ export class ProductsRepository {
   }
 
   async deleteById(id: string): Promise<void> {
-    await this.productModel.findOneAndDelete({ _id: id }).exec();
+    try {
+      await this.productModel.findOneAndDelete({ _id: id }).exec();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }
