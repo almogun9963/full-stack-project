@@ -42,7 +42,7 @@ export class CartResolver {
     try {
       await this.cartService.getCartById(id);
     } catch {
-      throw new NotFoundException("Cart does not exist - remove from cart");
+      throw new NotFoundException("Cart does not exist - add To Cart By Id");
     }
 
     try {

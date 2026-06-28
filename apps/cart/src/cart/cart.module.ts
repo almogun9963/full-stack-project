@@ -15,14 +15,18 @@ import { ProductsDataLoader } from "./products.dataloader";
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: "PRODUCT_SERVICE",
-        transport: Transport.TCP,
-        options: {
-          host: "localhost",
-          port: 3007,
-        },
+        imports: [ConfigModule],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get<string>("TCP_URI"),
+            port: Number(configService.get<string>("TCP_PORT")),
+          },
+        }),
+        inject: [ConfigService],
       },
     ]),
 

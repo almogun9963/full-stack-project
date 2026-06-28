@@ -16,16 +16,13 @@ async function bootstrap() {
     name: "Tag",
   });
 
-  app.connectMicroservice(
-    {
-      transport: Transport.TCP,
-      options: {
-        host: "localhost",
-        port: 3007,
-      },
+  app.connectMicroservice({
+    transport: Transport.TCP,
+    options: {
+      host: configService.get<string>("TCP_URI"),
+      port: Number(configService.get<string>("TCP_PORT")),
     },
-    { inheritAppConfig: true },
-  );
+  });
 
   await app.startAllMicroservices();
 
