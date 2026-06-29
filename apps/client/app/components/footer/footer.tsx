@@ -1,0 +1,11 @@
+import style from "./footer.module.scss";
+
+const Footer = () => {
+  return (
+    <div className={style.footer}>
+      <p>footer</p>
+    </div>
+  );
+};
+
+export default Footer;
