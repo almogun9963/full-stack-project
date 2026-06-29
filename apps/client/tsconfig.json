@@ -2,7 +2,10 @@
   "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDirs": [".", "./.react-router/types"],
   },
-  "include": ["src/**/*"]
+  "include": ["**/*",
+    "**/.server/**/*",
+    "**/.client/**/*",
+    ".react-router/types/**/*"]
 }
