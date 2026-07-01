@@ -7,18 +7,28 @@ import Store from "./components/store/store";
 import Product from "./components/product/product";
 import Checkout from "./components/checkout/checkout";
 import Cart from "./components/cart/cart";
+import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client/react";
+
+const link = createHttpLink({ uri: "http://localhost:3000/graphql" });
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+});
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/store" element={<Store />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
-    </BrowserRouter>
+    <ApolloProvider client={client}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
+      </BrowserRouter>
+    </ApolloProvider>
   );
 }
 
