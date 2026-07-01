@@ -4,7 +4,6 @@ const Header = () => {
   return (
     <div className={style.headerBox}>
       <div className={style.upperText}>
-        <p>עקבו אחרינו</p>
         <img
           src="../../src/assets/facebook.png"
           alt="facebook logo"
@@ -30,6 +29,7 @@ const Header = () => {
           width="45"
           height="50"
         ></img>
+        <p> :עקבו אחרינו</p>
       </div>
       <div className={style.bottomText}>
         <div>
@@ -53,7 +53,7 @@ const Header = () => {
           ></img>
         </div>
         <textarea> חפשו כאן</textarea>
-        <div>
+        <div className={style.bottomText}>
           <img
             src="../../src/assets/sheep.png"
             alt="image of a sheep"
