@@ -1,0 +1,20 @@
+.headerBox{
+    color:#ffffff;
+    background-color: #2da5f3;
+    position: sticky;
+    top: 0;
+}
+.upperText{
+  display:flex;
+  justify-content:center;
+  flex-direction:row;
+  align-items:center;
+}
+
+.bottomText{
+  display:flex;
+  justify-content:space-around;
+  flex-direction:row;
+  font-size:2rem;
+  align-items:center;
+}
