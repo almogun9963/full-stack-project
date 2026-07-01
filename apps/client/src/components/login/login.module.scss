@@ -1,0 +1,69 @@
+.formBox{
+  justify-content:center;
+  font-size:2rem;
+  align-items:center;
+  margin:auto;
+gap: 15px; 
+  width: 30rem;
+  height: 30rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  margin-top:5rem;
+    display: flex;
+  flex-direction: column;
+}
+.loginText{
+border-bottom: 3px solid #fa8232;
+width: 100%;
+text-align: center;
+}
+
+.text{
+  display:flex;
+  justify-content:center;
+  font-size:2rem;
+  align-items:center;
+    background-color: #2da5f3;
+    width:100%;
+    height:10rem;
+    position: sticky;
+    top: 0;
+    color:#ffffff;
+}
+
+
+.form {
+    margin:auto;
+  margin-top:0;
+
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-top:2rem;
+  font-size:1rem;
+  text-align: right;
+}
+
+.input {
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin: 0;
+  width: 20rem;
+}
+
+.button{
+background-color: #fa8232;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+width: 20rem;
+margin:0;
+margin-top:2rem;
+
+}
