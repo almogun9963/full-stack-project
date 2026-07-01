@@ -26,8 +26,6 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      console.log("before");
-
       await signIn({
         variables: {
           username: userName,
@@ -35,10 +33,9 @@ export default function Login() {
         },
       });
 
-      console.log("after");
       navigate("store");
     } catch (err) {
-      console.error("error:", err);
+      alert("couldnt login, with error: " + err);
     }
   };
 
