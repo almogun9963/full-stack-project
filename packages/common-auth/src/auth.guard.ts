@@ -38,6 +38,14 @@ export class AuthGuard implements CanActivate {
 
     try {
       jwt.verify(token, secret);
+      const decoded = jwt.verify(token, secret) as {
+        id?: string;
+        username?: string;
+      };
+
+      if (gqlContext) {
+        gqlContext.user = decoded;
+      }
     } catch {
       throw new UnauthorizedException();
     }
