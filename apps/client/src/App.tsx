@@ -10,7 +10,10 @@ import Cart from "./components/cart/cart";
 import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 
-const link = createHttpLink({ uri: "http://localhost:3000/graphql" });
+const link = createHttpLink({
+  uri: "http://localhost:3000/graphql",
+  credentials: "include",
+});
 const client = new ApolloClient({
   link,
   cache: new InMemoryCache(),
