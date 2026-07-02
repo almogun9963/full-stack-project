@@ -30,14 +30,12 @@ export class AuthResolver {
     return tokenResponse;
   }
 
-  @Mutation(() => TokenResponse)
+  @Mutation(() => String)
   async refresh(
     @Context() context: { res: Response },
     @Args("refreshInput") refreshInput: RefreshInput,
-  ): Promise<{
-    accessToken: string;
-  }> {
-    const accessToken = this.authService.refreshTokens(refreshInput);
+  ): Promise<string> {
+    const { accessToken } = await this.authService.refreshTokens(refreshInput);
     context.res.cookie("accessToken", accessToken, {
       httpOnly: true,
       path: "/",

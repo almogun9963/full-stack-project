@@ -81,7 +81,7 @@ export class CartService {
 
     if (cart) {
       await this.cartRepository.delete(id);
-      this.logger.log("Cart with id ${id} has been deleted");
+      this.logger.log(`Cart with id ${id} has been deleted`);
 
       return `Cart with id ${id} has been deleted`;
     }
