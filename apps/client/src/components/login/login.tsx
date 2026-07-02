@@ -73,10 +73,23 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <div className={style.buttonsArea}>
+            <button
+              type="submit"
+              className={style.button}
+              onClick={handleSignIn}
+            >
+              &#8592; כניסה
+            </button>
 
-          <button type="submit" className={style.button} onClick={handleSignIn}>
-            &#8592; כניסה
-          </button>
+            <button
+              type="submit"
+              className={style.button}
+              onClick={() => navigate("signUp")}
+            >
+              &#8592; הרשמה
+            </button>
+          </div>
         </form>
       </div>
     </>
