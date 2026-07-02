@@ -18,7 +18,7 @@ import { JwtModule } from "@nestjs/jwt";
       useFactory: async (configService: ConfigService) => {
         const uri = configService.get<string>("MONGO_URI");
         return {
-          uri: uri + "/auth",
+          uri: uri + "/store",
         };
       },
     }),

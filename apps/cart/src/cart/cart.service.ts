@@ -76,9 +76,13 @@ export class CartService {
   }
 
   async deleteCart(id: string): Promise<string> {
-    const isDeleted = await this.cartRepository.delete(id);
-    return isDeleted
-      ? "Cart with id " + id + " has been deleted"
-      : "cart not found";
+    const cart = await this.getCartById(id);
+
+    if (cart) {
+      await this.cartRepository.delete(id);
+      return `Cart with id ${id} has been deleted`;
+    }
+
+    return `Cart with id ${id} not found`;
   }
 }
