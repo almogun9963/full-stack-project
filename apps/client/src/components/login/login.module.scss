@@ -10,6 +10,7 @@ gap: 15px;
   margin-top:5rem;
     display: flex;
   flex-direction: column;
+  
 }
 .loginText{
 border-bottom: 3px solid #fa8232;
@@ -28,6 +29,7 @@ text-align: center;
     position: sticky;
     top: 0;
     color:#ffffff;
+    text-indent: 10px;
 }
 
 
@@ -50,6 +52,16 @@ text-align: center;
   box-sizing: border-box;
   margin: 0;
   width: 20rem;
+    position: relative;
+
+  margin: 0 auto;
+  padding: 1em;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border: 1px solid #d3dee6;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 10em 1em 1em 1em;
 }
 
 .button{

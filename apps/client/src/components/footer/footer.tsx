@@ -7,8 +7,8 @@ const Footer = () => {
         <img
           src="../../src/assets/sheep.png"
           alt="image of a sheep"
-          width="45"
-          height="50"
+          width="30"
+          height="35"
         ></img>
         <p>Drop Sheeping</p>
       </div>

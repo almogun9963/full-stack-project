@@ -45,10 +45,10 @@ export default function Login() {
         <img
           src="../../src/assets/sheep.png"
           alt="image of a sheep"
-          width="45"
-          height="50"
+          width="30"
+          height="35"
         />
-        <p>Drop Sheeping</p>
+        <p> Drop Sheeping</p>
       </div>
 
       <div className={style.formBox}>

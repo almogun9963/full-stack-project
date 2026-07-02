@@ -7,27 +7,27 @@ const Header = () => {
         <img
           src="../../src/assets/facebook.png"
           alt="facebook logo"
-          width="45"
-          height="50"
+          width="30"
+          height="35"
         ></img>
 
         <img
           src="../../src/assets/reddit.png"
           alt="reddit logo"
-          width="45"
-          height="50"
+          width="30"
+          height="35"
         ></img>
         <img
           src="../../src/assets/youtube.png"
           alt="youtube logo"
-          width="45"
-          height="50"
+          width="30"
+          height="35"
         ></img>
         <img
           src="../../src/assets/instegram.png"
           alt="instegram logo"
-          width="45"
-          height="50"
+          width="30"
+          height="35"
         ></img>
         <p> :עקבו אחרינו</p>
       </div>
@@ -36,20 +36,20 @@ const Header = () => {
           <img
             src="../../src/assets/cart.png"
             alt="cart logo"
-            width="45"
-            height="50"
+            width="30"
+            height="35"
           ></img>
           <img
             src="../../src/assets/heart.png"
             alt="heart logo"
-            width="45"
-            height="50"
+            width="30"
+            height="35"
           ></img>
           <img
             src="../../src/assets/person.png"
             alt="person logo"
-            width="45"
-            height="50"
+            width="30"
+            height="35"
           ></img>
         </div>
         <textarea> חפשו כאן</textarea>
@@ -57,8 +57,8 @@ const Header = () => {
           <img
             src="../../src/assets/sheep.png"
             alt="image of a sheep"
-            width="45"
-            height="50"
+            width="30"
+            height="35"
           ></img>
           <p>Drop Sheeping</p>
         </div>
