@@ -1,5 +1,5 @@
 import { CartRepository } from "./cart.repository";
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Cart } from "./entities/cart.entity";
 import { firstValueFrom } from "rxjs";
 import { ClientProxy } from "@nestjs/microservices";
@@ -11,6 +11,7 @@ export class CartService {
     private cartRepository: CartRepository,
     @Inject("PRODUCT_SERVICE") private client: ClientProxy,
   ) {}
+  private readonly logger = new Logger(CartService.name);
 
   async create(userId: string) {
     return this.cartRepository.create(userId);
@@ -80,6 +81,8 @@ export class CartService {
 
     if (cart) {
       await this.cartRepository.delete(id);
+      this.logger.log("Cart with id ${id} has been deleted");
+
       return `Cart with id ${id} has been deleted`;
     }
 
