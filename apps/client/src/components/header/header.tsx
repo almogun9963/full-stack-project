@@ -1,6 +1,4 @@
-import style from "./header.module.scss";
-
 const Header = () => {
-  return <>header</>;
+  return <>login</>;
 };
 export default Header;
