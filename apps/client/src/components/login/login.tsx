@@ -3,6 +3,7 @@ import style from "./login.module.scss";
 import { useState } from "react";
 import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client/react";
+import { useCookies } from "react-cookie";
 
 const SIGN_IN_MUTATION = gql`
   mutation SignIn($username: String!, $password: String!) {
@@ -16,27 +17,32 @@ const SIGN_IN_MUTATION = gql`
 `;
 
 export default function Login() {
+  const defaultOption = {
+    path: "/",
+  };
+
   const [userName, setUserName] = useState("almog2");
   const [password, setPassword] = useState("!Aa1111111");
   const navigate = useNavigate();
-
+  const [cookies] = useCookies(["accessToken"]);
   const [signIn] = useMutation(SIGN_IN_MUTATION);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-
-    try {
-      await signIn({
-        variables: {
-          username: userName,
-          password: password,
-        },
-      });
-
-      navigate("store");
-    } catch (err) {
-      alert("couldnt login, with error: " + err);
+    if (cookies.accessToken === undefined) {
+      alert("sending login request");
+      try {
+        await signIn({
+          variables: {
+            username: userName,
+            password: password,
+          },
+        });
+      } catch (err) {
+        alert("couldnt login, with error: " + err);
+      }
     }
+    navigate("store");
   };
 
   return (
