@@ -47,6 +47,9 @@ const Header = () => {
           <img
             className={style.images}
             src="../../src/assets/cart.png"
+            onClick={() => {
+              navigate("/cart");
+            }}
             alt="cart logo"
           ></img>
           <img
