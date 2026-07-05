@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@as-integrations/express5": "^1.1.2",
-    "@nestjs/config": "4.0.4"
+    "@nestjs/config": "4.0.4",
+    "react-cookie": "^8.1.2"
   }
 }
