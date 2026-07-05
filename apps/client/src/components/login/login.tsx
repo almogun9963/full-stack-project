@@ -27,7 +27,7 @@ export default function Login() {
   const [cookies] = useCookies(["accessToken"]);
   const [signIn] = useMutation(SIGN_IN_MUTATION);
 
-  const handleSignIn = async (e) => {
+  const handleSignIn = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (cookies.accessToken === undefined) {
       alert("sending login request");
