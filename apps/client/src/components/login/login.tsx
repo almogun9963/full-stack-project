@@ -17,10 +17,6 @@ const SIGN_IN_MUTATION = gql`
 `;
 
 export default function Login() {
-  const defaultOption = {
-    path: "/",
-  };
-
   const [userName, setUserName] = useState("almog2");
   const [password, setPassword] = useState("!Aa1111111");
   const navigate = useNavigate();
