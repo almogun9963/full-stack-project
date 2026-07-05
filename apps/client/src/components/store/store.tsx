@@ -5,7 +5,7 @@ import { gql } from "@apollo/client";
 import { useMutation, useQuery } from "@apollo/client/react";
 import { useNavigate } from "react-router-dom";
 import type { ProductType } from "@repo/common-types";
-import Product from "../product/product";
+import ProductLogo from "../productLogo/product-logo";
 
 const PRODUCTS_QUERY_WITH_FILTERS = gql`
   {
@@ -61,7 +61,6 @@ export default function Store() {
       if (data?.products) {
         setProducts(data.products);
       }
-      alert(JSON.stringify(products));
     } catch (err) {
       alert("couldnt signUp, with error: " + err);
     }
@@ -70,7 +69,10 @@ export default function Store() {
     <>
       <Header />
       <div>
-        <Product></Product>
+        {products?.map((product: ProductType) => (
+          <ProductLogo key={product.id} product={product}></ProductLogo>
+        ))}
+
         <button onClick={handleSignUp}>CLICK ME</button>
       </div>
       <Footer />
