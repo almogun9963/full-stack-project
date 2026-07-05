@@ -49,6 +49,7 @@ const Header = () => {
             src="../../src/assets/cart.png"
             onClick={() => {
               navigate("/cart");
+              setSearchParams();
             }}
             alt="cart logo"
           ></img>
