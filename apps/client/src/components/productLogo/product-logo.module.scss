@@ -8,6 +8,7 @@
   background: #ffffff;
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
   max-width: 380px;
+  position: sticky
 }
 
 .productImage {
@@ -50,13 +51,8 @@
   font-size: 0.9rem;
 }
 
-.stars {
-  letter-spacing: 0.05em;
-}
-
 .ratingCount {
-  color: #64748b;
-  font-size: 0.85rem;
+  color: #888484;
 }
 
 .price {
