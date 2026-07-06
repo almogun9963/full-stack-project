@@ -1,6 +1,6 @@
 import Footer from "../footer/footer";
 import Header from "../header/header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 import { useNavigate } from "react-router-dom";
@@ -9,27 +9,8 @@ import ProductLogo from "../productLogo/product-logo";
 import styles from "./store.module.scss";
 
 const PRODUCTS_QUERY_WITH_FILTERS = gql`
-  {
-    products(filters: {}) {
-      id
-      name
-      price
-      company
-      productType
-      ratings
-      description
-      size
-      tags
-      imageUrl
-      isAvailable
-      category
-    }
-  }
-`;
-
-const PRODUCTS_QUERY = gql`
-  {
-    products {
+  query GetProducts($filters: FiltersProductInput!) {
+    products(filters: $filters) {
       id
       name
       price
@@ -48,26 +29,25 @@ const PRODUCTS_QUERY = gql`
 export default function Store() {
   const navigate = useNavigate();
   const [tags, setTags] = useState([""]);
-  const [companys, setCompanys] = useState([""]);
+  const [company, setCompany] = useState("");
   const [fromPrice, setFromPrice] = useState(0);
   const [toPrice, setToPrice] = useState(3000);
 
   const { loading, error, data } = useQuery<{ products: ProductType[] }>(
-    PRODUCTS_QUERY,
+    PRODUCTS_QUERY_WITH_FILTERS,
+    {
+      variables: {
+        filters: {
+          price: { from: fromPrice, to: toPrice },
+          tags: tags.filter((tag) => tag !== ""),
+          company: company || undefined,
+        },
+      },
+    },
   );
 
   const [products, setProducts] = useState<ProductType[]>([]);
-  const loadData = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      while (loading) {}
-      if (data?.products) {
-        setProducts(data.products);
-      }
-    } catch (err) {
-      alert("couldnt signUp, with error: " + err);
-    }
-  };
+
   const handleTagsCheckbox = (e, tagName: string) => {
     if (e.target.checked) {
       setTags([...tags, tagName]);
@@ -78,11 +58,14 @@ export default function Store() {
 
   const handleCompanyCheckbox = (e, companyName: string) => {
     if (e.target.checked) {
-      setCompanys([...companys, companyName]);
-    } else {
-      setCompanys(companys.filter((item) => item !== companyName));
+      setCompany(companyName);
     }
   };
+
+  useEffect(() => {
+    setProducts(data?.products);
+  }, [data]);
+
   return (
     <>
       <Header />
@@ -146,7 +129,7 @@ export default function Store() {
                 name="Ultra HD"
                 id=""
                 onClick={(e) => {
-                  handleTagsCheckbox(e, "Ultra HD");
+                  handleTagsCheckbox(e, "UltraHD");
                 }}
               />
               <span>Ultra HD</span>
@@ -176,7 +159,7 @@ export default function Store() {
                 name="4K"
                 id=""
                 onClick={(e) => {
-                  handleTagsCheckbox(e, "4K");
+                  handleTagsCheckbox(e, "FourK");
                 }}
               />
               <span>4K</span>
@@ -373,8 +356,6 @@ export default function Store() {
           {products?.map((product: ProductType) => (
             <ProductLogo key={product.id} product={product}></ProductLogo>
           ))}
-
-          <button onClick={loadData}>CLICK ME</button>
         </div>
       </div>
 
