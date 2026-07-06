@@ -47,20 +47,16 @@ const PRODUCTS_QUERY = gql`
 
 export default function Store() {
   const navigate = useNavigate();
+  const [tags, setTags] = useState([""]);
+  const [companys, setCompanys] = useState([""]);
   const [fromPrice, setFromPrice] = useState(0);
   const [toPrice, setToPrice] = useState(3000);
 
   const { loading, error, data } = useQuery<{ products: ProductType[] }>(
     PRODUCTS_QUERY,
   );
-  const [products, setProducts] = useState<ProductType[]>([]);
-  const handleFromPrice = (e) => {
-    setFromPrice(Number(e.target.value));
-  };
 
-  const handleToPrice = (e) => {
-    setToPrice(Number(e.target.value));
-  };
+  const [products, setProducts] = useState<ProductType[]>([]);
   const loadData = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
@@ -72,6 +68,21 @@ export default function Store() {
       alert("couldnt signUp, with error: " + err);
     }
   };
+  const handleTagsCheckbox = (e, tagName: string) => {
+    if (e.target.checked) {
+      setTags([...tags, tagName]);
+    } else {
+      setTags(tags.filter((item) => item !== tagName));
+    }
+  };
+
+  const handleCompanyCheckbox = (e, companyName: string) => {
+    if (e.target.checked) {
+      setCompanys([...companys, companyName]);
+    } else {
+      setCompanys(companys.filter((item) => item !== companyName));
+    }
+  };
   return (
     <>
       <Header />
@@ -80,40 +91,124 @@ export default function Store() {
           <span>תגיות</span>
           <form>
             <div>
-              <input type="checkbox" name="Budget" id="" />
+              <input
+                type="checkbox"
+                name="Budget"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Budget");
+                }}
+              />
               <span>Budget</span>
 
-              <input type="checkbox" name="Pro" id="" />
+              <input
+                type="checkbox"
+                name="Pro"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Pro");
+                }}
+              />
               <span>Pro</span>
 
-              <input type="checkbox" name="RGB" id="" />
-              <span>RGB</span>
+              <input
+                type="checkbox"
+                name="RGB"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "RGB");
+                }}
+              />
+              <span></span>
 
-              <input type="checkbox" name="Computer" id="" />
+              <input
+                type="checkbox"
+                name="Computer"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Computer");
+                }}
+              />
               <span>Computer</span>
 
-              <input type="checkbox" name="Laptop" id="" />
+              <input
+                type="checkbox"
+                name="Laptop"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Laptop");
+                }}
+              />
               <span>Laptop</span>
 
-              <input type="checkbox" name="Ultra HD" id="" />
+              <input
+                type="checkbox"
+                name="Ultra HD"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Ultra HD");
+                }}
+              />
               <span>Ultra HD</span>
 
-              <input type="checkbox" name="Wireless" id="" />
+              <input
+                type="checkbox"
+                name="Wireless"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Wireless");
+                }}
+              />
               <span>Wireless</span>
 
-              <input type="checkbox" name="Performance" id="" />
+              <input
+                type="checkbox"
+                name="Performance"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Performance");
+                }}
+              />
               <span>Performance</span>
 
-              <input type="checkbox" name="4K" id="" />
+              <input
+                type="checkbox"
+                name="4K"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "4K");
+                }}
+              />
               <span>4K</span>
 
-              <input type="checkbox" name="Fast" id="" />
+              <input
+                type="checkbox"
+                name="Fast"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Fast");
+                }}
+              />
               <span>Fast</span>
 
-              <input type="checkbox" name="Gaming" id="" />
+              <input
+                type="checkbox"
+                name="Gaming"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Gaming");
+                }}
+              />
               <span>Gaming</span>
 
-              <input type="checkbox" name="Compact" id="" />
+              <input
+                type="checkbox"
+                name="Compact"
+                id=""
+                onClick={(e) => {
+                  handleTagsCheckbox(e, "Compact");
+                }}
+              />
               <span>Compact</span>
             </div>
             <span>{fromPrice}</span>
@@ -126,7 +221,7 @@ export default function Store() {
                   max={toPrice - 1}
                   name=""
                   id=""
-                  onChange={handleFromPrice}
+                  onChange={(e) => setFromPrice(Number(e.target.value))}
                 />
                 <input
                   type="range"
@@ -135,7 +230,9 @@ export default function Store() {
                   max={3000}
                   name=""
                   id=""
-                  onChange={handleToPrice}
+                  onChange={(e) => {
+                    setToPrice(Number(e.target.value));
+                  }}
                 />
               </div>
             </div>
@@ -146,48 +243,127 @@ export default function Store() {
               <input
                 type="number"
                 value={fromPrice}
-                onChange={handleFromPrice}
+                onChange={(e) => setFromPrice(Number(e.target.value))}
               ></input>
 
               <input
                 type="number"
                 value={toPrice}
-                onChange={handleToPrice}
+                onChange={(e) => {
+                  setToPrice(Number(e.target.value));
+                }}
               ></input>
             </div>
             <span>חברות</span>
             <div>
-              <input type="checkbox" name="Corsair" id="" />
+              <input
+                type="checkbox"
+                name="Corsair"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "Corsair");
+                }}
+              />
               <span>Corsair</span>
 
-              <input type="checkbox" name="HP" id="" />
+              <input
+                type="checkbox"
+                name="HP"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "HP");
+                }}
+              />
               <span>HP</span>
 
-              <input type="checkbox" name="Razer" id="" />
+              <input
+                type="checkbox"
+                name="Razer"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "Razer");
+                }}
+              />
               <span>Razer</span>
 
-              <input type="checkbox" name="Intel" id="" />
+              <input
+                type="checkbox"
+                name="Intel"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "Intel");
+                }}
+              />
               <span>Intel</span>
 
-              <input type="checkbox" name="Gigabyte" id="" />
+              <input
+                type="checkbox"
+                name="Gigabyte"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "Gigabyte");
+                }}
+              />
               <span>Gigabyte</span>
 
-              <input type="checkbox" name="Logitech" id="" />
+              <input
+                type="checkbox"
+                name="Logitech"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "Logitech");
+                }}
+              />
               <span>Logitech</span>
 
-              <input type="checkbox" name="LG" id="" />
+              <input
+                type="checkbox"
+                name="LG"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "LG");
+                }}
+              />
               <span>LG</span>
 
-              <input type="checkbox" name="MSI" id="" />
+              <input
+                type="checkbox"
+                name="MSI"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "MSI");
+                }}
+              />
               <span>MSI</span>
 
-              <input type="checkbox" name="Samsung" id="" />
+              <input
+                type="checkbox"
+                name="Samsung"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "Samsung");
+                }}
+              />
               <span>Samsung</span>
 
-              <input type="checkbox" name="Canon" id="" />
+              <input
+                type="checkbox"
+                name="Canon"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "Canon");
+                }}
+              />
               <span>Canon</span>
 
-              <input type="checkbox" name="AMD" id="" />
+              <input
+                type="checkbox"
+                name="AMD"
+                id=""
+                onClick={(e) => {
+                  handleCompanyCheckbox(e, "AMD");
+                }}
+              />
               <span>AMD</span>
             </div>
           </form>
