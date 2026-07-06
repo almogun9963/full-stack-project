@@ -28,7 +28,7 @@ const PRODUCTS_QUERY_WITH_FILTERS = gql`
 
 export default function Store() {
   const navigate = useNavigate();
-  const [tags, setTags] = useState([""]);
+  const [tags, setTags] = useState<string[]>([]);
   const [company, setCompany] = useState("");
   const [fromPrice, setFromPrice] = useState(0);
   const [toPrice, setToPrice] = useState(3000);
@@ -39,8 +39,8 @@ export default function Store() {
       variables: {
         filters: {
           price: { from: fromPrice, to: toPrice },
-          tags: tags.filter((tag) => tag !== ""),
-          company: company || undefined,
+          ...(tags.length > 0 ? { tags } : {}),
+          ...(company ? { company } : {}),
         },
       },
     },
@@ -59,6 +59,8 @@ export default function Store() {
   const handleCompanyCheckbox = (e, companyName: string) => {
     if (e.target.checked) {
       setCompany(companyName);
+    } else {
+      setCompany("");
     }
   };
 
