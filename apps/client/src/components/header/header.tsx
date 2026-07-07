@@ -4,10 +4,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   const [searchString, setSearchString] = useState("");
 
-  const onEnterPress = (e) => {
+  const onEnterPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.keyCode == 13 && e.shiftKey == false) {
       e.preventDefault();
       navigate("/store");
