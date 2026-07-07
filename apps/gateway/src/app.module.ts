@@ -51,10 +51,21 @@ import type { Request, Response } from "express";
                   }
                 },
                 async didReceiveResponse({ response, context }) {
-                  const setCookie = response.http?.headers.get("set-cookie");
+                  const setCookieHeader =
+                    response.http?.headers.get("set-cookie");
+                  console.log(setCookieHeader);
+
                   const res = (context as any)?.res as Response | undefined;
-                  if (setCookie && res && typeof res.setHeader === "function") {
-                    res.setHeader("set-cookie", setCookie);
+
+                  if (
+                    setCookieHeader &&
+                    res &&
+                    typeof res.setHeader === "function"
+                  ) {
+                    const cookiesArray = setCookieHeader.split(
+                      /,(?=\s*[a-zA-Z0-9_]+=)/,
+                    );
+                    res.setHeader("set-cookie", cookiesArray);
                   }
                   return response;
                 },
