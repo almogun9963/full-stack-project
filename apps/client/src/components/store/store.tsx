@@ -104,7 +104,6 @@ export default function Store() {
                   handleTagsCheckbox(e, "RGB");
                 }}
               />
-              <span></span>
 
               <input
                 type="checkbox"
