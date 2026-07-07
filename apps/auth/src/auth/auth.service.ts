@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   UnauthorizedException,
@@ -98,7 +99,7 @@ export class AuthService {
     );
 
     if (!secretRefreshToken) {
-      throw new Error(
+      throw new InternalServerErrorException(
         "REFRESH_TOKEN_SECRET  is missing from the environment configuration",
       );
     }
@@ -126,7 +127,7 @@ export class AuthService {
     );
 
     if (!secretRefreshToken) {
-      throw new Error(
+      throw new InternalServerErrorException(
         "REFRESH_TOKEN_SECRET is missing from the environment configuration",
       );
     }
