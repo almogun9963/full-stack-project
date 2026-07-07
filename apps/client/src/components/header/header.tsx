@@ -1,6 +1,6 @@
 import { useState } from "react";
 import style from "./header.module.scss";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Facebook from "../../assets/Facebook.svg?react";
 import Heart from "../../assets/Heart.svg?react";
 import Instagram from "../../assets/Instagram.svg?react";
@@ -20,7 +20,6 @@ const Header = () => {
       navigate(`/store?query=${encodeURIComponent(searchString)}`);
     }
   };
-
   return (
     <div className={style.headerBox}>
       <div className={style.upperText}>
