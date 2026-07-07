@@ -30,16 +30,14 @@ export class AuthResolver {
     return tokenResponse;
   }
 
-  @Mutation(() => TokenResponse)
+  @Mutation(() => String)
   async refresh(
     @Context() context: { res: Response },
     @Args("refreshInput") refreshInput: RefreshInput,
-  ): Promise<{
-    accessToken: string;
-  }> {
-    const accessToken = this.authService.refreshTokens(refreshInput);
+  ): Promise<string> {
+    const { accessToken } = await this.authService.refreshTokens(refreshInput);
     context.res.cookie("accessToken", accessToken, {
-      httpOnly: true,
+      httpOnly: false,
       path: "/",
       maxAge: 1 * 60 * 60 * 1000,
     });
@@ -51,16 +49,16 @@ export class AuthResolver {
     context: { res: Response },
     tokenResponse: TokenResponse,
   ): void {
-    context.res.cookie("accessToken", tokenResponse.accessToken, {
-      httpOnly: true,
-      path: "/",
-      maxAge: 1 * 60 * 60 * 1000,
-    });
-
     context.res.cookie("refreshToken", tokenResponse.refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    context.res.cookie("accessToken", tokenResponse.accessToken, {
+      httpOnly: false,
+      path: "/",
+      maxAge: 1 * 60 * 60 * 1000,
     });
   }
 }
