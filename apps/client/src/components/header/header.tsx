@@ -1,18 +1,15 @@
 import { useState } from "react";
 import style from "./header.module.scss";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [, setSearchParams] = useSearchParams();
   const [searchString, setSearchString] = useState("");
 
   const onEnterPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.keyCode == 13 && e.shiftKey == false) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      navigate("/store");
-
-      setSearchParams({ query: searchString });
+      navigate(`/store?query=${encodeURIComponent(searchString)}`);
     }
   };
 
@@ -49,7 +46,6 @@ const Header = () => {
             src="../../src/assets/ShoppingCartSimple.svg"
             onClick={() => {
               navigate("/cart");
-              setSearchParams();
             }}
             alt="cart logo"
           ></img>
