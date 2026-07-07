@@ -52,8 +52,7 @@ const Header = () => {
           ></textarea>
         </div>
         <div className={style.bottomText}>
-          <>🐑</>
-          <p>Drop Sheeping</p>
+          <>🐑 Drop Sheeping</>
         </div>
       </div>
     </div>
