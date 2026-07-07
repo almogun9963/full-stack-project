@@ -46,7 +46,7 @@ const Header = () => {
         <div>
           <img
             className={style.images}
-            src="../../src/assets/cart.png"
+            src="../../src/assets/ShoppingCartSimple.svg"
             onClick={() => {
               navigate("/cart");
               setSearchParams();
@@ -67,7 +67,7 @@ const Header = () => {
         <div className={style.searchContainer}>
           <img
             className={style.searchIcon}
-            src="../../src/assets/search.png"
+            src="../../src/assets/MagnifyingGlass.png"
             alt="search logo"
           ></img>
           <textarea
