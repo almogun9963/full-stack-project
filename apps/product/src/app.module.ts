@@ -1,0 +1,27 @@
+import { Module } from "@nestjs/common";
+import { ProductsModule } from "./products/products.module";
+import { MongooseModule } from "@nestjs/mongoose";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+@Module({
+  imports: [
+    ProductsModule,
+    MongooseModule.forRootAsync({
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: ["../../.env"],
+          isGlobal: true,
+        }),
+      ],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const uri = configService.get<string>("MONGO_URI");
+        return {
+          uri: uri + "/store",
+        };
+      },
+    }),
+  ],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
