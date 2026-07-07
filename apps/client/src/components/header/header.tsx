@@ -21,24 +21,24 @@ const Header = () => {
       <div className={style.upperText}>
         <img
           className={style.images}
-          src="../../src/assets/facebook.png"
+          src="../../src/assets/Facebook.svg"
           alt="facebook logo"
         ></img>
 
         <img
           className={style.images}
-          src="../../src/assets/reddit.png"
+          src="../../src/assets/Reddit.svg"
           alt="reddit logo"
         ></img>
         <img
           className={style.images}
-          src="../../src/assets/youtube.png"
+          src="../../src/assets/Youtube.svg"
           alt="youtube logo"
         ></img>
         <img
           className={style.images}
-          src="../../src/assets/instegram.png"
-          alt="instegram logo"
+          src="../../src/assets/Instagram.svg"
+          alt="instagram logo"
         ></img>
         <p> :עקבו אחרינו</p>
       </div>
@@ -55,12 +55,12 @@ const Header = () => {
           ></img>
           <img
             className={style.images}
-            src="../../src/assets/heart.png"
+            src="../../src/assets/Heart.svg"
             alt="heart logo"
           ></img>
           <img
             className={style.images}
-            src="../../src/assets/person.png"
+            src="../../src/assets/User.svg"
             alt="person logo"
           ></img>
         </div>
@@ -79,11 +79,7 @@ const Header = () => {
           ></textarea>
         </div>
         <div className={style.bottomText}>
-          <img
-            className={style.images}
-            src="../../src/assets/sheep.png"
-            alt="image of a sheep"
-          ></img>
+          <>🐑</>
           <p>Drop Sheeping</p>
         </div>
       </div>
