@@ -37,7 +37,7 @@ export class AuthResolver {
   ): Promise<string> {
     const { accessToken } = await this.authService.refreshTokens(refreshInput);
     context.res.cookie("accessToken", accessToken, {
-      httpOnly: true,
+      httpOnly: false,
       path: "/",
       maxAge: 1 * 60 * 60 * 1000,
     });
@@ -50,13 +50,13 @@ export class AuthResolver {
     tokenResponse: TokenResponse,
   ): void {
     context.res.cookie("accessToken", tokenResponse.accessToken, {
-      httpOnly: true,
+      httpOnly: false,
       path: "/",
       maxAge: 1 * 60 * 60 * 1000,
     });
 
     context.res.cookie("refreshToken", tokenResponse.refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
