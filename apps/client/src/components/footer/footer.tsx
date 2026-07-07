@@ -4,8 +4,7 @@ const Footer = () => {
   return (
     <div className={style.footerBox}>
       <div className={style.footerUpperText}>
-        <>🐑</>
-        <p>Drop Sheeping</p>
+        <>🐑 Drop Sheeping</>
       </div>
 
       <div className={style.footerBottomText}>
