@@ -4,12 +4,7 @@ const Footer = () => {
   return (
     <div className={style.footerBox}>
       <div className={style.footerUpperText}>
-        <img
-          src="../../src/assets/sheep.png"
-          alt="image of a sheep"
-          width="30"
-          height="35"
-        ></img>
+        <>🐑</>
         <p>Drop Sheeping</p>
       </div>
 
