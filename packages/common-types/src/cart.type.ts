@@ -1,4 +1,4 @@
-import { ProductType } from "product.type";
+import { ProductType } from "./product.type.js";
 
 export interface CartType {
   id: string;

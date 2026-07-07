@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -31,13 +32,20 @@ export class AuthGuard implements CanActivate {
     const secret = this.configService.get<string>("JWT_SECRET");
 
     if (!secret) {
-      throw new Error(
+      throw new InternalServerErrorException(
         "JWT_SECRET is missing from the environment configuration",
       );
     }
 
     try {
-      jwt.verify(token, secret);
+      const decoded = jwt.verify(token, secret) as {
+        id?: string;
+        username?: string;
+      };
+
+      if (gqlContext) {
+        gqlContext.user = decoded;
+      }
     } catch {
       throw new UnauthorizedException();
     }

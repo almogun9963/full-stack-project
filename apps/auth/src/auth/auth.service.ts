@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   UnauthorizedException,
@@ -98,8 +99,8 @@ export class AuthService {
     );
 
     if (!secretRefreshToken) {
-      throw new Error(
-        "JWT_SECRET is missing from the environment configuration",
+      throw new InternalServerErrorException(
+        "REFRESH_TOKEN_SECRET  is missing from the environment configuration",
       );
     }
     try {
@@ -124,6 +125,12 @@ export class AuthService {
     const secretRefreshToken = this.configService.get<string>(
       "REFRESH_TOKEN_SECRET",
     );
+
+    if (!secretRefreshToken) {
+      throw new InternalServerErrorException(
+        "REFRESH_TOKEN_SECRET is missing from the environment configuration",
+      );
+    }
 
     const newRefreshToken = await this.jwtService.signAsync(payload, {
       secret: secretRefreshToken,

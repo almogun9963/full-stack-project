@@ -3,6 +3,7 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from "@nestjs/apollo";
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from "@apollo/gateway";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import type { Request, Response } from "express";
 
 @Module({
   imports: [
@@ -28,7 +29,11 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         return {
           driver: ApolloGatewayDriver,
           server: {
-            context: ({ req }: { req: Request }) => ({ headers: req.headers }),
+            context: ({ req, res }: { req: Request; res: Response }) => ({
+              headers: req.headers,
+              req,
+              res,
+            }),
           },
           gateway: {
             buildService({ url }) {
@@ -44,6 +49,25 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
                       incomingHeaders.authorization,
                     );
                   }
+                },
+                async didReceiveResponse({ response, context }) {
+                  const setCookieHeader =
+                    response.http?.headers.get("set-cookie");
+                  console.log(setCookieHeader);
+
+                  const res = (context as any)?.res as Response | undefined;
+
+                  if (
+                    setCookieHeader &&
+                    res &&
+                    typeof res.setHeader === "function"
+                  ) {
+                    const cookiesArray = setCookieHeader.split(
+                      /,(?=\s*[a-zA-Z0-9_]+=)/,
+                    );
+                    res.setHeader("set-cookie", cookiesArray);
+                  }
+                  return response;
                 },
               });
             },

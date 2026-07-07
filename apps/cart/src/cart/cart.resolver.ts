@@ -50,7 +50,7 @@ export class CartResolver {
         context.req.get("Authorization")?.split(" ")[1].toString() || "";
       return await this.cartService.addToCart(token, id, productIdToAdd);
     } catch {
-      throw new NotFoundException("Product does not exist - remove from cart");
+      throw new NotFoundException("Product does not exist - add To Cart By Id");
     }
   }
 
