@@ -1,6 +1,14 @@
 import { useState } from "react";
 import style from "./header.module.scss";
 import { useNavigate } from "react-router-dom";
+import Facebook from "../../assets/Facebook.svg?react";
+import Heart from "../../assets/Heart.svg?react";
+import Instagram from "../../assets/Instagram.svg?react";
+import MagnifyingGlass from "../../assets/MagnifyingGlass.svg?react";
+import Reddit from "../../assets/Reddit.svg?react";
+import ShoppingCartSimple from "../../assets/ShoppingCartSimple.svg?react";
+import Youtube from "../../assets/Youtube.svg?react";
+import User from "../../assets/User.svg?react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,56 +24,25 @@ const Header = () => {
   return (
     <div className={style.headerBox}>
       <div className={style.upperText}>
-        <img
-          className={style.images}
-          src="../../src/assets/Facebook.svg"
-          alt="facebook logo"
-        ></img>
-
-        <img
-          className={style.images}
-          src="../../src/assets/Reddit.svg"
-          alt="reddit logo"
-        ></img>
-        <img
-          className={style.images}
-          src="../../src/assets/Youtube.svg"
-          alt="youtube logo"
-        ></img>
-        <img
-          className={style.images}
-          src="../../src/assets/Instagram.svg"
-          alt="instagram logo"
-        ></img>
+        <Facebook className={style.images}></Facebook>
+        <Reddit className={style.images}></Reddit>
+        <Youtube className={style.images}></Youtube>
+        <Instagram className={style.images}></Instagram>
         <p> :עקבו אחרינו</p>
       </div>
       <div className={style.bottomText}>
         <div>
-          <img
-            className={style.images}
-            src="../../src/assets/ShoppingCartSimple.svg"
+          <ShoppingCartSimple
             onClick={() => {
               navigate("/cart");
             }}
-            alt="cart logo"
-          ></img>
-          <img
             className={style.images}
-            src="../../src/assets/Heart.svg"
-            alt="heart logo"
-          ></img>
-          <img
-            className={style.images}
-            src="../../src/assets/User.svg"
-            alt="person logo"
-          ></img>
+          ></ShoppingCartSimple>
+          <Heart className={style.images}></Heart>
+          <User className={style.images}></User>
         </div>
         <div className={style.searchContainer}>
-          <img
-            className={style.searchIcon}
-            src="../../src/assets/MagnifyingGlass.svg"
-            alt="search logo"
-          ></img>
+          <MagnifyingGlass className={style.images}></MagnifyingGlass>
           <textarea
             className={style.textArea}
             placeholder="חפשו כאן"
