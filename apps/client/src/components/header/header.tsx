@@ -67,7 +67,7 @@ const Header = () => {
         <div className={style.searchContainer}>
           <img
             className={style.searchIcon}
-            src="../../src/assets/MagnifyingGlass.png"
+            src="../../src/assets/MagnifyingGlass.svg"
             alt="search logo"
           ></img>
           <textarea
