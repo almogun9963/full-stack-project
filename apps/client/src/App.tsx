@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Cart from "../components/cart/cart";
-import Checkout from "../components/checkout/checkout";
-import Login from "../components/login/login";
-import Product from "../components/product/product";
-import Store from "../components/store/store";
 import "./App.css";
 import "./app.css";
+import Login from "./components/login/login";
+import Store from "./components/store/store";
+import Product from "./components/product/product";
+import Checkout from "./components/checkout/checkout";
+import Cart from "./components/cart/cart";
 
 function App() {
   return (
